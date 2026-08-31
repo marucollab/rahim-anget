@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rahim Anget</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/gg-sans');
+
+        :root {
+            --bg-primary: #313338;
+            --bg-secondary: #2b2d31;
+            --bg-secondary-alt: #232428;
+            --bg-tertiary: #1e1f22;
+            --bg-floating: #111214;
+            --bg-modifier-hover: rgba(255, 255, 255, 0.06);
+            --bg-modifier-active: rgba(255, 255, 255, 0.1);
+            --bg-modifier-selected: rgba(255, 255, 255, 0.14);
+            --text-normal: #dbdee1;
+            --text-muted: #949ba4;
+            --header-primary: #f2f3f5;
+            --interactive-normal: #b5bac1;
+            --interactive-hover: #dbdee1;
+            --interactive-active: #ffffff;
+            --brand-experiment: #e91e63;
+            --brand-experiment-hover: #c2185b;
+            --green: #23a559;
+            --red: #da373c;
+            --yellow: #f0b232;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body, html { width: 100%; height: 100%; background-color: var(--bg-primary); color: var(--text-normal); overflow: hidden; font-size: 15px; }
+        svg { fill: currentColor; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 4px; border: 2px solid var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
+        .channel-sidebar::-webkit-scrollbar-track, .members-sidebar::-webkit-scrollbar-track { background: var(--bg-secondary); border: none; }
+
+        /* Italic support */
+        .msg-text i, .msg-text em, .italic {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        /* === ONBOARDING === */
+        #onboarding-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center; z-index: 999999;
+        }
+        .onboarding-card {
+            background-color: var(--bg-primary); width: 90%; max-width: 440px; padding: 32px; border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center; display: none;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .onboarding-card.active { display: block; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .onboarding-card h2 { color: var(--header-primary); font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .onboarding-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.4;}
+        .btn-option {
+            background-color: var(--bg-secondary); color: var(--text-normal); padding: 14px; border-radius: 8px;
+            width: 100%; margin-bottom: 12px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.2s ease;
+        }
+        .btn-option:hover { background-color: var(--bg-modifier-hover); }
+        .btn-option.selected { background-color: rgba(233, 30, 99, 0.15); box-shadow: 0 0 0 1px var(--brand-experiment); }
+        .input-text {
+            width: 100%; background: var(--bg-tertiary); border: none; color: var(--text-normal);
+            padding: 14px; border-radius: 8px; font-size: 16px; margin-bottom: 24px; outline: none;
+        }
+        .input-text:focus { box-shadow: 0 0 0 2px var(--brand-experiment); }
+        .pfp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .pfp-option {
+            width: 100%; aspect-ratio: 1/1; border-radius: 50%; cursor: pointer; object-fit: cover;
+            border: 3px solid transparent; transition: all 0.2s; background: var(--bg-tertiary);
+        }
+        .pfp-option.selected { border-color: var(--brand-experiment); transform: scale(1.05); }
+        .btn-continue {
+            background-color: var(--brand-experiment); color: white; border: none; padding: 14px; width: 100%;
+            border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .btn-continue:hover { background-color: var(--brand-experiment-hover); }
+        .btn-continue:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* === DISCORD APP LAYOUT === */
+        #discord-app { display: none; width: 100%; height: 100%; flex-direction: row; position: relative;}
+        .mobile-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 50; }
+        .sidebar-wrapper { display: flex; height: 100%; flex-shrink: 0; z-index: 60; background: var(--bg-secondary);}
+
+        .server-sidebar { width: 72px; background-color: var(--bg-tertiary); display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 8px; flex-shrink: 0; }
+        .server-wrapper { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; cursor: pointer;}
+        .server-pill { position: absolute; left: 0; width: 4px; background-color: var(--header-primary); border-radius: 0 4px 4px 0; transition: height 0.2s; height: 0; }
+        .server-wrapper:hover .server-pill:not(.pill-active) { height: 20px; }
+        .pill-active { height: 40px; }
+        .server-icon {
+            width: 48px; height: 48px; border-radius: 50%; background-color: var(--bg-primary); display: flex; font-size: 14px; font-weight: bold;
+            justify-content: center; align-items: center; color: var(--text-normal); transition: all 0.2s ease; object-fit: cover; text-align: center;
+        }
+        .server-wrapper:hover .server-icon { border-radius: 16px; background-color: var(--brand-experiment); color: white; }
+        .server-icon.active { border-radius: 16px; }
+        .server-separator { width: 32px; height: 2px; background-color: var(--bg-modifier-active); margin: 4px 0; }
+
+        .channel-sidebar { width: 240px; background-color: var(--bg-secondary); display: flex; flex-direction: column; flex-shrink: 0; }
+        .server-header {
+            height: 48px; padding: 0 16px; font-weight: 700; font-size: 15px; color: var(--header-primary);
+            display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.15s;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2); flex-shrink: 0; letter-spacing: -0.01em;
+        }
+        .server-header:hover { background-color: var(--bg-modifier-hover); }
+        .channel-list { padding: 8px 8px 12px; flex: 1; overflow-y: auto; }
+        .channel-category {
+            color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+            margin-top: 18px; margin-bottom: 2px; padding: 0 8px; display: flex; align-items: center; gap: 3px;
+        }
+        .channel-item {
+            padding: 7px 8px; margin-bottom: 1px; border-radius: 4px; color: var(--interactive-normal);
+            cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 15px;
+            transition: background 0.1s, color 0.1s;
+        }
+        .channel-item svg { width: 20px; height: 20px; color: var(--text-muted); flex-shrink: 0; }
+        .channel-item:hover { background-color: var(--bg-modifier-hover); color: var(--interactive-hover); }
+        .channel-item.active { background-color: var(--bg-modifier-selected); color: var(--interactive-active); }
+        .channel-item.active svg { color: var(--interactive-active); }
+
+        .user-panel {
+            background-color: var(--bg-secondary-alt); height: 52px; padding: 0 8px; display: flex;
+            align-items: center; justify-content: space-between; flex-shrink: 0; border-top: 1px solid rgba(0,0,0,0.2);
+        }
+        .user-info-section { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 4px; cursor: pointer; flex: 1; min-width: 0;}
+        .user-info-section:hover { background-color: var(--bg-modifier-hover); }
+        .user-panel-avatar { position: relative; width: 32px; height: 32px; flex-shrink: 0;}
+        .user-panel-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .status-bubble { position: absolute; bottom: -2px; right: -2px; width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--bg-secondary-alt); }
+        .user-panel-text { display: flex; flex-direction: column; overflow: hidden; line-height: 1.2; }
+        .user-panel-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-panel-sub { font-size: 11px; color: var(--text-muted); white-space: nowrap;}
+        .user-controls { display: flex; gap: 2px; }
+        .control-btn { width: 32px; height: 32px; border-radius: 4px; cursor: pointer; color: var(--interactive-normal); display: flex; align-items: center; justify-content: center; transition: background 0.1s, color 0.1s; }
+        .control-btn:hover { background-color: var(--bg-modifier-hover); color: var(--interactive-hover); }
+
+        .chat-area { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-primary); min-width: 0; position: relative;}
+        .chat-header {
+            height: 48px; padding: 0 16px; display: flex; align-items: center; border-bottom: 1px solid var(--bg-tertiary); gap: 8px; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .mobile-menu-btn { display: none; color: var(--interactive-normal); cursor: pointer; margin-right: 8px; }
+        .chat-header-title { display: flex; align-items: center; gap: 8px; color: var(--header-primary); font-size: 16px; font-weight: 600; }
+        .chat-header-subtext { display: none; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-left: 8px;}
+        .chat-header svg { color: var(--text-muted); width: 24px; height: 24px; }
+        .header-tools { display: flex; align-items: center; gap: 16px; color: var(--interactive-normal); margin-left: auto;}
+        .header-tools svg { width: 24px; height: 24px; cursor: pointer; }
+        .header-tools svg:hover { color: var(--interactive-hover); }
+
+        .messages-container { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; padding-bottom: 16px;}
+        
+        .system-msg { padding: 8px 16px 8px 72px; position: relative; display: flex; flex-direction: column; margin-top: 17px;}
+        .system-msg:hover { background-color: var(--bg-modifier-hover); }
+        .sys-icon { position: absolute; left: 24px; top: 10px; width: 20px; height: 20px; color: var(--green); }
+        .sys-content { font-size: 15px; color: var(--text-normal); line-height: 1.4;}
+        .sys-time { font-size: 12px; color: var(--text-muted); margin-left: 6px; }
+        .btn-wave {
+            background: var(--bg-secondary); border: 1px solid var(--bg-modifier-active); color: var(--text-normal); 
+            padding: 4px 8px; border-radius: 4px; margin-top: 4px; cursor: pointer; font-size: 14px; 
+            display: inline-flex; align-items: center; gap: 6px; font-weight: 500; width: fit-content;
+        }
+        .btn-wave:hover { background: var(--bg-modifier-hover); color: var(--interactive-hover); }
+
+        .message { padding: 3px 48px 3px 72px; position: relative; display: flex; flex-direction: column; word-wrap: break-word; transition: background 0.1s;}
+        .message:hover { background-color: var(--bg-modifier-hover); }
+        .message.first { padding-top: 16px; margin-top: 12px; }
+        .msg-avatar { position: absolute; left: 16px; top: 16px; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; object-fit: cover; }
+        .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 1px; }
+        .msg-username { font-size: 15px; font-weight: 600; color: var(--header-primary); cursor: pointer; line-height: 1.3;}
+        .msg-username:hover { text-decoration: underline; }
+        .msg-timestamp { font-size: 11px; color: var(--text-muted); font-weight: 500; opacity: 0.85;}
+        .msg-text { font-size: 15px; line-height: 1.45; color: var(--text-normal); font-weight: 400;}
+
+        .message-reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+        .reaction-pill {
+            display: flex; align-items: center; gap: 5px; background-color: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px; padding: 3px 7px; cursor: pointer; user-select: none; transition: 0.12s;
+        }
+        .reaction-pill:hover { border-color: var(--bg-modifier-selected); background-color: var(--bg-modifier-hover); }
+        .reaction-pill span.emoji { font-size: 15px; line-height: 1; }
+        .reaction-count { font-size: 12px; font-weight: 600; color: var(--interactive-normal); }
+
+        .chat-input-wrapper { padding: 0 16px 20px; flex-shrink: 0;}
+        .chat-input-container-mobile { display: flex; align-items: center; gap: 10px; background: var(--bg-primary);}
+        .btn-circle {
+            width: 32px; height: 32px; background-color: var(--bg-secondary); border-radius: 50%; display: flex; flex-shrink: 0;
+            align-items: center; justify-content: center; color: var(--interactive-normal); cursor: pointer; font-size: 20px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-circle:hover { background-color: var(--bg-modifier-hover); color: var(--interactive-hover); }
+        .chat-input-inner {
+            flex: 1; background-color: var(--bg-secondary); border-radius: 22px; display: flex; align-items: center;
+            padding: 10px 16px; gap: 8px; min-height: 44px;
+        }
+        .chat-input-inner input { background: none; border: none; outline: none; width: 100%; color: var(--text-normal); font-size: 15px; }
+        .chat-input-extra-icons { display: flex; align-items: center; gap: 16px; color: var(--interactive-normal); }
+        .chat-input-extra-icons svg { width: 24px; height: 24px; cursor: pointer; }
+
+        .members-sidebar { width: 240px; background-color: var(--bg-secondary); padding: 0 8px 16px; flex-shrink: 0; overflow-y: auto; z-index: 90;}
+        .member-category { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 24px 0 4px 8px; letter-spacing: 0.02em;}
+        .member-item { display: flex; align-items: center; gap: 12px; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-bottom: 2px; }
+        .member-item:hover { background-color: var(--bg-modifier-hover); }
+        .member-avatar-wrapper { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
+        .member-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .member-status { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid var(--bg-secondary); }
+        .status-online { background-color: var(--green); }
+        .status-dnd { background-color: var(--red); }
+        .status-idle { background-color: var(--yellow); }
+        .member-name { font-size: 15px; color: var(--text-muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Profile Modal */
+        #profile-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            display: none; justify-content: center; align-items: center; z-index: 999999;
+        }
+        .profile-card {
+            background-color: var(--bg-floating); width: 340px; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.24); position: relative; animation: popIn 0.2s ease-out;
+        }
+        .profile-banner { height: 120px; width: 100%; background-color: #e91e63; }
+        .profile-header { position: relative; padding: 0; }
+        .profile-avatar-wrapper-modal {
+            width: 80px; height: 80px; border-radius: 50%; border: 6px solid var(--bg-floating);
+            position: absolute; top: -40px; left: 16px; background: var(--bg-floating);
+        }
+        .profile-avatar-modal { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .profile-modal-status { 
+            position: absolute; bottom: 0px; right: 0px; width: 20px; height: 20px; 
+            border-radius: 50%; border: 4px solid var(--bg-floating); 
+        }
+        .profile-badges { display: flex; justify-content: flex-end; padding: 12px 16px 12px 0; gap: 4px; height: 46px; }
+        .badge { width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #232428; color: var(--interactive-normal); }
+        .profile-info { background-color: #232428; margin: 0 16px 16px; padding: 12px; border-radius: 8px; }
+        .profile-name { font-size: 20px; font-weight: 700; color: #f2f3f5; line-height: 1.2; margin-bottom: 2px;}
+        .profile-username { font-size: 14px; color: #dbdee1; font-weight: 500; margin-bottom: 12px; }
+        .profile-pronouns { font-size: 14px; color: #dbdee1; margin-bottom: 12px; }
+        .profile-divider { height: 1px; background-color: #313338; margin: 12px 0; }
+        .profile-section-title { font-size: 12px; font-weight: 800; color: #b5bac1; text-transform: uppercase; margin-bottom: 8px; }
+        .profile-about { font-size: 14px; color: #dbdee1; line-height: 1.375; white-space: pre-wrap; }
+        .roles-container { display: flex; flex-wrap: wrap; gap: 4px; }
+        .role-pill { background-color: #2b2d31; border: 1px solid #1e1f22; border-radius: 4px; padding: 4px 6px; font-size: 12px; display: flex; align-items: center; gap: 4px; font-weight: 500; color: #dbdee1; }
+        .role-circle { width: 12px; height: 12px; border-radius: 50%; }
+        .btn-dm { display: block; background-color: #e91e63; color: white; text-align: center; padding: 8px 16px; margin-top: 16px; border-radius: 4px; font-weight: 500; font-size: 14px; width: 100%; border: none; cursor: pointer; }
+        .btn-dm:hover { background-color: #c2185b; }
+
+        /* === SERVER INFO MODAL (like Discord) === */
+        #server-info-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            display: none; justify-content: center; align-items: flex-start; z-index: 999999; padding-top: 40px; overflow-y: auto;
+        }
+        .server-info-card {
+            background-color: #1e1f22; width: 92%; max-width: 420px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5); animation: popIn 0.25s ease-out; margin-bottom: 40px;
+        }
+        .server-info-header {
+            background: linear-gradient(135deg, #e91e63 0%, #9b59b6 100%);
+            padding: 24px 20px 16px; text-align: center; position: relative;
+        }
+        .server-info-icon {
+            width: 80px; height: 80px; border-radius: 20px; background: #1e1f22; margin: 0 auto 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: white;
+            border: 4px solid #1e1f22; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .server-info-name { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
+        .server-info-desc { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 12px; }
+        .server-info-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .server-badge {
+            background: rgba(0,0,0,0.35); color: white; font-size: 12px; padding: 4px 10px; border-radius: 12px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .server-info-body { padding: 16px 20px; }
+        .server-info-stats { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 16px; font-weight: 700; color: var(--header-primary); }
+        .stat-label { font-size: 12px; color: var(--text-muted); }
+        .server-info-actions { display: flex; gap: 10px; margin-bottom: 16px; }
+        .server-action-btn {
+            flex: 1; background: #2b2d31; border: none; color: var(--text-normal); padding: 12px 8px;
+            border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; gap: 6px; transition: background 0.15s;
+        }
+        .server-action-btn:hover { background: #36383d; }
+        .server-action-btn svg { width: 22px; height: 22px; }
+        .server-info-section { background: #2b2d31; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+        .server-info-row {
+            padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #1e1f22; cursor: pointer; font-size: 15px; color: var(--text-normal);
+        }
+        .server-info-row:last-child { border-bottom: none; }
+        .server-info-row:hover { background: rgba(255,255,255,0.04); }
+        .toggle-switch {
+            width: 40px; height: 24px; background: #4e5058; border-radius: 12px; position: relative; transition: 0.2s;
+        }
+        .toggle-switch.on { background: #5865F2; }
+        .toggle-switch::after {
+            content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%;
+            top: 3px; left: 3px; transition: 0.2s;
+        }
+        .toggle-switch.on::after { left: 19px; }
+        .server-info-close {
+            position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(0,0,0,0.4); border: none; color: white; font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 800px) {
+            .mobile-menu-btn { display: block; }
+            .header-tools { display: none; }
+            .chat-header-subtext { display: block; }
+            .chat-header-title { flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2; }
+            .sidebar-wrapper {
+                position: absolute; left: 0; top: 0; bottom: 0; width: 85%; max-width: 340px;
+                transform: translateX(-100%); transition: transform 0.3s ease;
+                box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+            }
+            .channel-sidebar { width: calc(100% - 72px); }
+            .members-sidebar {
+                position: absolute; right: 0; top: 0; bottom: 0; width: 85%; max-width: 320px;
+                transform: translateX(100%); transition: transform 0.3s ease; box-shadow: -4px 0 24px rgba(0,0,0,0.5);
+            }
+            body.show-left-nav .sidebar-wrapper { transform: translateX(0); }
+            body.show-left-nav .mobile-overlay { display: block; }
+            body.show-right-nav .members-sidebar { transform: translateX(0); }
+            body.show-right-nav .mobile-overlay { display: block; }
+            .chat-input-extra-icons { display: none; }
+        }
+        .svg-defs { display: none; }
+    </style>
+</head>
+<body>
+
+    <svg class="svg-defs">
+        <defs>
+            <path id="icon-hash" d="M10.99 3.16A1 1 0 1 0 9 2.84L8.15 8H4a1 1 0 0 0 0 2h3.82l-1.2 7H3a1 1 0 1 0 0 2h3.29l-.86 5.16a1 1 0 0 0 1.98.32l.93-5.48h7.2l-.86 5.16a1 1 0 0 0 1.98.32l.93-5.48h4.12a1 1 0 1 0 0-2h-3.8l1.2-7h3.62a1 1 0 1 0 0-2h-3.29l.86-5.16a1 1 0 1 0-1.98-.32l-.93 5.48h-7.2L10.99 3.16Zm5.18 6.84-1.2 7H7.77l1.2-7h6.2Z"/>
+            <path id="icon-voice" d="M11.38 2.08A1 1 0 0 1 13 3v18a1 1 0 1 1-1.62.78l-4.14-5.28H4a2 2 0 0 1-2-2V9.5a2 2 0 0 1 2-2h3.24l4.14-5.42ZM20 12.5a3.5 3.5 0 0 1-3.5 3.5 1 1 0 1 0 0 2 5.5 5.5 0 0 0 0-11 1 1 0 1 0 0 2 3.5 3.5 0 0 1 3.5 3.5Z"/>
+            <path id="icon-mic" d="M14.99 11C14.99 12.66 13.66 14 12 14C10.34 14 9 12.66 9 11V5C9 3.34 10.34 2 12 2C13.66 2 15 3.34 15 5L14.99 11ZM12 16.1C14.76 16.1 17.3 14 17.3 11H19C19 14.42 16.28 17.24 13 17.72V21H11V17.72C7.72 17.23 5 14.41 5 11H6.7C6.7 14 9.24 16.1 12 16.1Z"/>
+            <path id="icon-deafen" d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"/>
+            <path id="icon-settings" fill-rule="evenodd" clip-rule="evenodd" d="M11.64 5.93h1.43l1.28 2.22h2.24l.57 2.45 2.14 1.35-.58 2.44-2.13 1.36-.57 2.44h-2.24l-1.28 2.22h-1.43l-1.28-2.22H7.55l-.57-2.44-2.14-1.36.58-2.44 2.13-1.35.57-2.45h2.24l1.28-2.22zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path id="icon-hamburger" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            <path id="icon-members" d="M14 8.77v-1.6c0-1.94-1.55-3.5-3.5-3.5s-3.5 1.56-3.5 3.5v1.61c-1.31.73-2.2 2.14-2.2 3.82v3c0 2.4 1.96 4.36 4.36 4.36h2.68C14.24 19.96 16.2 18 16.2 15.6v-3c0-1.68-.89-3.09-2.2-3.83z"/>
+            <path id="icon-arrow" d="M5.3 9.3a.996.996 0 1 0 1.4 1.4l4.3-4.3v11.6c0 .6.4 1 1 1s1-.4 1-1V6.4l4.3 4.3a.996.996 0 1 0 1.4-1.4l-6-6c-.4-.4-1-.4-1.4 0l-6 6z" transform="rotate(90 12 12)"/>
+            <path id="icon-search" d="M21.7 20.3l-3.7-3.7c1.2-1.5 2-3.5 2-5.6 0-5-4-9-9-9s-9 4-9 9 4 9 9 9c2.1 0 4.1-.8 5.6-2l3.7 3.7c.2.2.5.3.7.3s.5-.1.7-.3c.4-.4.4-1 0-1.4zM11 18c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7z"/>
+        </defs>
+    </svg>
+
+    <!-- ONBOARDING -->
+    <div id="onboarding-container">
+        <div class="onboarding-card active" id="step-1">
+            <h2>Welcome to Rahim Anget</h2>
+            <p>Private server. Before you enter, what is your gender?</p>
+            <div class="btn-option" onclick="selectOption('gender', 'Male')">Male</div>
+            <div class="btn-option" onclick="selectOption('gender', 'Female')">Female</div>
+            <div class="btn-option" onclick="selectOption('gender', 'Any')">Non-Binary / Any</div>
+            <button class="btn-continue" id="btn-next-1" disabled onclick="nextStep(2)">Continue</button>
+        </div>
+        <div class="onboarding-card" id="step-2">
+            <h2>Who are you looking to meet?</h2>
+            <p>This will customize the members you see.</p>
+            <div class="btn-option" onclick="selectOption('pref', 'Male')">Guys Only</div>
+            <div class="btn-option" onclick="selectOption('pref', 'Female')">Girls Only</div>
+            <div class="btn-option" onclick="selectOption('pref', 'Any')">Anyone (Mixed)</div>
+            <button class="btn-continue" id="btn-next-2" disabled onclick="nextStep(3)">Continue</button>
+        </div>
+        <div class="onboarding-card" id="step-3">
+            <h2>What's your display name?</h2>
+            <p>This is how others will see you in chat.</p>
+            <input type="text" class="input-text" id="user-display-name" placeholder="Enter username..." oninput="checkName()">
+            <button class="btn-continue" id="btn-next-3" disabled onclick="nextStep(4)">Continue</button>
+        </div>
+        <div class="onboarding-card" id="step-4">
+            <h2>Choose an Avatar</h2>
+            <p>Select your persona.</p>
+            <div class="pfp-grid">
+                <img src="https://s4.anilist.co/file/anilistcdn/character/large/b175534-hPUF4hBKzerm.png" class="pfp-option" onclick="selectPfp(this)">
+                <img src="https://s4.anilist.co/file/anilistcdn/character/large/b175535-YEl2tT3h34wW.png" class="pfp-option" onclick="selectPfp(this)">
+                <img src="https://s4.anilist.co/file/anilistcdn/character/large/b190370-66fLWXXqRVmP.png" class="pfp-option" onclick="selectPfp(this)">
+                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Raka&backgroundColor=b6e3f4" class="pfp-option" onclick="selectPfp(this)">
+                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Dinda&backgroundColor=ffd5dc" class="pfp-option" onclick="selectPfp(this)">
+                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Budi&backgroundColor=c0aede" class="pfp-option" onclick="selectPfp(this)">
+            </div>
+            <button class="btn-continue" id="btn-next-4" disabled onclick="enterServer()">Join Server</button>
+        </div>
+    </div>
+
+    <!-- DISCORD APP -->
+    <div id="discord-app">
+        <div class="mobile-overlay" onclick="closeMobileMenus()"></div>
+        
+        <div class="sidebar-wrapper">
+            <nav class="server-sidebar">
+                <div class="server-wrapper">
+                    <div class="server-pill"></div>
+                    <div class="server-icon" style="background-color: #5865F2; color: white;">
+                        <svg width="28" height="20" viewBox="0 0 28 20"><path d="M23.0212 1.67671C21.3107 0.879656 19.5079 0.318797 17.6584 0C17.4062 0.461742 17.1749 0.934541 16.9708 1.4184C15.003 1.12145 12.9974 1.12145 11.0283 1.4184C10.819 0.934541 10.589 0.461742 10.3368 0C8.48597 0.318797 6.68316 0.879656 4.97271 1.67671C1.56727 6.77853 0.649666 11.7538 1.11108 16.652C3.10102 18.1418 5.3262 19.2743 7.69177 20C8.22338 19.2743 8.69519 18.4993 9.09812 17.691C8.32996 17.3997 7.58522 17.0424 6.87684 16.6135C7.06531 16.4762 7.24726 16.3387 7.42403 16.1847C11.5911 18.1749 16.408 18.1749 20.5763 16.1847C20.7531 16.3332 20.9351 16.4762 21.1171 16.6135C20.41 17.0369 19.6639 17.3997 18.897 17.691C19.3052 18.4993 19.7718 19.2689 20.3021 20C22.6677 19.2743 24.8929 18.1418 26.8828 16.652C27.43 10.9731 25.9665 6.04728 23.0212 1.67671ZM9.68041 13.6383C8.39754 13.6383 7.34085 12.4453 7.34085 10.994C7.34085 9.54272 8.37155 8.34973 9.68041 8.34973C10.9893 8.34973 12.0395 9.54272 12.0187 10.994C12.0187 12.4453 10.9828 13.6383 9.68041 13.6383ZM18.3161 13.6383C17.0332 13.6383 15.9765 12.4453 15.9765 10.994C15.9765 9.54272 17.0072 8.34973 18.3161 8.34973C19.625 8.34973 20.6751 9.54272 20.6543 10.994C20.6543 12.4453 19.625 13.6383 18.3161 13.6383Z"/></svg>
+                    </div>
+                </div>
+                <div class="server-separator"></div>
+                <div class="server-wrapper" onclick="closeMobileMenus()">
+                    <div class="server-pill pill-active"></div>
+                    <div class="server-icon active" style="background: linear-gradient(135deg, #e91e63, #9b59b6); color: white; font-size: 11px;">RA</div>
+                </div>
+                <div class="server-wrapper">
+                    <div class="server-pill"></div>
+                    <div class="server-icon" style="color: var(--green);">
+                        <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6V5Z"></path></svg>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="channel-sidebar">
+                <div class="server-header" onclick="openServerInfo()">
+                    Rahim Anget
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+                </div>
+                <div class="channel-list">
+                    <div class="channel-category">
+                        <svg width="12" height="12" viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg> Welcome
+                    </div>
+                    <div class="channel-item" onclick="switchChannel('rules', this)">
+                        <svg viewBox="0 0 24 24"><use href="#icon-hash"></use></svg> rules-and-info
+                    </div>
+                    
+                    <div class="channel-category">
+                        <svg width="12" height="12" viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg> Chat & Connect
+                    </div>
+                    <div class="channel-item active" onclick="switchChannel('general', this)">
+                        <svg viewBox="0 0 24 24"><use href="#icon-hash"></use></svg> general
+                    </div>
+                    <div class="channel-item" onclick="switchChannel('kink', this)">
+                        <svg viewBox="0 0 24 24"><use href="#icon-hash"></use></svg> kink-talk
+                    </div>
+                    <div class="channel-item" onclick="switchChannel('looking', this)">
+                        <svg viewBox="0 0 24 24"><use href="#icon-hash"></use></svg> looking-for
+                    </div>
+                    <div class="channel-item" onclick="switchChannel('media', this)">
+                        <svg viewBox="0 0 24 24"><use href="#icon-hash"></use></svg> media
+                    </div>
+                </div>
+                
+                <div class="user-panel">
+                    <div class="user-info-section" onclick="openMyProfile()">
+                        <div class="user-panel-avatar">
+                            <img id="my-pfp-bottom" src="">
+                            <div class="status-bubble status-online"></div>
+                        </div>
+                        <div class="user-panel-text">
+                            <span id="my-name-bottom" class="user-panel-name">User</span>
+                            <span class="user-panel-sub">Online</span>
+                        </div>
+                    </div>
+                    <div class="user-controls">
+                        <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-mic"></use></svg></div>
+                        <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-deafen"></use></svg></div>
+                        <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-settings"></use></svg></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="mobile-menu-btn" onclick="toggleMenu('left')"><svg width="24" height="24" viewBox="0 0 24 24"><use href="#icon-hamburger"></use></svg></div>
+                <svg class="hash-icon" id="current-channel-icon" viewBox="0 0 24 24"><use href="#icon-hash"></use></svg>
+                <div class="chat-header-title">
+                    <span id="current-channel-title">general</span>
+                    <span class="chat-header-subtext" id="member-count-mobile">• Members</span>
+                </div>
+                <div class="header-tools">
+                    <svg viewBox="0 0 24 24"><use href="#icon-search"></use></svg>
+                    <svg viewBox="0 0 24 24" onclick="toggleMenu('right')"><use href="#icon-members"></use></svg>
+                </div>
+                <div class="mobile-menu-btn" style="margin-left:auto; margin-right: 0;" onclick="toggleMenu('right')">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use href="#icon-members"></use></svg>
+                </div>
+            </header>
+
+            <div id="view-chat" class="messages-container"></div>
+
+            <div id="view-rules" class="messages-container" style="display: none; padding: 24px;">
+                <h1 style="color: var(--header-primary); margin-bottom: 16px;">Welcome to Rahim Anget</h1>
+                <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">Private invite-only space. Keep things respectful and adult.</p>
+                
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand-experiment);">
+                    <h4 style="color: var(--header-primary); margin-bottom: 4px;">1. 18+ Only</h4>
+                    <p style="font-size: 14px; color: var(--text-normal);">Strictly for adults. No exceptions.</p>
+                </div>
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand-experiment);">
+                    <h4 style="color: var(--header-primary); margin-bottom: 4px;">2. Consent First</h4>
+                    <p style="font-size: 14px; color: var(--text-normal);">Always ask before private conversations of an intimate nature.</p>
+                </div>
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand-experiment);">
+                    <h4 style="color: var(--header-primary); margin-bottom: 4px;">3. No Judgment</h4>
+                    <p style="font-size: 14px; color: var(--text-normal);">Different professions, dynamics, and preferences are welcome here.</p>
+                </div>
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand-experiment);">
+                    <h4 style="color: var(--header-primary); margin-bottom: 4px;">4. Protect Privacy</h4>
+                    <p style="font-size: 14px; color: var(--text-normal);">Many of us use alternate names. Do not share personal details without permission.</p>
+                </div>
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--brand-experiment);">
+                    <h4 style="color: var(--header-primary); margin-bottom: 4px;">5. Keep Channels in Mind</h4>
+                    <p style="font-size: 14px; color: var(--text-normal);">#general is for normal conversation. More private topics belong in the dedicated channels.</p>
+                </div>
+            </div>
+
+            <div class="chat-input-wrapper" id="chat-input-container">
+                <div class="chat-input-container-mobile">
+                    <div class="btn-circle">+</div>
+                    <div class="chat-input-inner">
+                        <input type="text" id="chat-type-box" placeholder="Message #general..." onkeypress="handleTyping(event)">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="members-sidebar" id="member-list-container"></aside>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profile-modal" onclick="closeProfile(event)">
+        <div class="profile-card" onclick="event.stopPropagation()">
+            <div class="profile-banner" id="modal-banner"></div>
+            <div class="profile-header">
+                <div class="profile-avatar-wrapper-modal">
+                    <img id="modal-pfp" src="" class="profile-avatar-modal">
+                    <div class="profile-modal-status" id="modal-status"></div>
+                </div>
+                <div class="profile-badges">
+                    <div class="badge"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M13.4 3L11 9h5l-6 12 2-6H7l6-12h.4z"/></svg></div>
+                </div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name" id="modal-name">Username</div>
+                <div class="profile-username" id="modal-username">username</div>
+                <div class="profile-pronouns" id="modal-pronouns">she/her</div>
+                <div class="profile-divider"></div>
+                <div class="profile-section-title">About Me</div>
+                <div class="profile-about" id="modal-about"></div>
+                <div class="profile-divider"></div>
+                <div class="profile-section-title">Member Since</div>
+                <div style="font-size: 14px; color: #dbdee1; margin-bottom: 12px;">Sep 2025</div>
+                <div class="profile-section-title">Roles</div>
+                <div class="roles-container" id="modal-roles"></div>
+                <a href="https://janitorai.com/profiles/8afb6826-bbbc-4bb1-a21b-3711233c96d2_profile-of-florazula" target="_blank" rel="noopener" class="btn-dm" style="text-decoration:none;display:block;">Send Message</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVER INFO MODAL -->
+    <div id="server-info-modal" onclick="closeServerInfo(event)">
+        <div class="server-info-card" onclick="event.stopPropagation()">
+            <div class="server-info-header">
+                <button class="server-info-close" onclick="closeServerInfo()">×</button>
+                <div class="server-info-icon">RA</div>
+                <div class="server-info-name">Rahim Anget</div>
+                <div class="server-info-desc">Private community for adults who share specific interests. Invite-only. No judgment.</div>
+                <div class="server-info-badges">
+                    <span class="server-badge">Community</span>
+                    <span class="server-badge">● 12 Online</span>
+                    <span class="server-badge">48 Members</span>
+                </div>
+            </div>
+            <div class="server-info-body">
+                <div class="server-info-actions">
+                    <button class="server-action-btn">
+                        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        Boosts
+                    </button>
+                    <button class="server-action-btn">
+                        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        Invite
+                    </button>
+                    <button class="server-action-btn">
+                        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        Notifs
+                    </button>
+                </div>
+
+                <div class="server-info-section">
+                    <div class="server-info-row">Mark As Read</div>
+                    <div class="server-info-row">Browse Channels <span style="color:var(--brand-experiment);font-size:12px;font-weight:700;">NEW</span></div>
+                </div>
+
+                <div class="server-info-section">
+                    <div class="server-info-row">Edit Per-server Profile</div>
+                    <div class="server-info-row">
+                        Show All Channels
+                        <div class="toggle-switch on"></div>
+                    </div>
+                    <div class="server-info-row">
+                        Hide Muted Channels
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="server-info-row">
+                        Allow Direct Messages
+                        <div class="toggle-switch on"></div>
+                    </div>
+                    <div class="server-info-row">
+                        Allow Message Requests
+                        <div class="toggle-switch on"></div>
+                    </div>
+                </div>
+
+                <div class="server-info-section">
+                    <div class="server-info-row" style="color:#ed4245;">Report Server</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userData = { gender: '', pref: '', name: '', pfp: '' };
+
+        function selectOption(type, value) {
+            userData[type] = value;
+            let step = type === 'gender' ? 1 : 2;
+            document.querySelectorAll(`#step-${step} .btn-option`).forEach(c => c.classList.remove('selected'));
+            event.target.classList.add('selected');
+            document.getElementById(`btn-next-${step}`).disabled = false;
+        }
+        function checkName() {
+            userData.name = document.getElementById('user-display-name').value.trim();
+            document.getElementById('btn-next-3').disabled = (userData.name === '');
+        }
+        function selectPfp(img) {
+            userData.pfp = img.src;
+            document.querySelectorAll('.pfp-option').forEach(i => i.classList.remove('selected'));
+            img.classList.add('selected');
+            document.getElementById('btn-next-4').disabled = false;
+        }
+        function nextStep(num) {
+            document.querySelectorAll('.onboarding-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`step-${num}`).classList.add('active');
+        }
+        function enterServer() {
+            document.getElementById('onboarding-container').style.display = 'none';
+            document.getElementById('discord-app').style.display = 'flex';
+            document.getElementById('my-pfp-bottom').src = userData.pfp;
+            document.getElementById('my-name-bottom').innerText = userData.name;
+            initChatDatabase();
+            chatDB.general.unshift({ sys: true, id: 'user' });
+            loadServerData();
+            renderChat('general');
+        }
+        function toggleMenu(side) {
+            if (side === 'left') {
+                document.body.classList.remove('show-right-nav');
+                document.body.classList.toggle('show-left-nav');
+            } else {
+                document.body.classList.remove('show-left-nav');
+                document.body.classList.toggle('show-right-nav');
+            }
+        }
+        function closeMobileMenus() {
+            document.body.classList.remove('show-left-nav', 'show-right-nav');
+        }
+
+        let currentChannel = 'general';
+        function switchChannel(channelId, element) {
+            document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            let text = element.innerText.trim();
+            document.getElementById('current-channel-title').innerText = text;
+            document.getElementById('view-chat').style.display = 'none';
+            document.getElementById('view-rules').style.display = 'none';
+            if (channelId === 'rules') {
+                document.getElementById('view-rules').style.display = 'block';
+                document.getElementById('chat-input-container').style.display = 'none';
+            } else {
+                currentChannel = channelId;
+                document.getElementById('view-chat').style.display = 'flex';
+                document.getElementById('chat-input-container').style.display = 'block';
+                document.getElementById('chat-type-box').placeholder = `Message #${text}...`;
+                renderChat(channelId);
+            }
+            closeMobileMenus();
+        }
+
+        function openServerInfo() {
+            document.getElementById('server-info-modal').style.display = 'flex';
+        }
+        function closeServerInfo(e) {
+            if (!e || e.target.id === 'server-info-modal' || e.target.classList.contains('server-info-close')) {
+                document.getElementById('server-info-modal').style.display = 'none';
+            }
+        }
+
+        /* Characters */
+        const characters = {
+            sari: {
+                id: 'sari', name: "Sari", username: "sari_admin", gender: "Female",
+                pfp: "https://s4.anilist.co/file/anilistcdn/character/large/b175534-hPUF4hBKzerm.png",
+                pronouns: "she/her", color: "#f1c40f", banner: "#e91e63", status: "status-online",
+                about: "Server owner. PNS by day. I keep things orderly here so everyone can relax. Welcome, <i>sayang</i>.",
+                roles: [ { name: "Server Owner", color: "#f1c40f" }, { name: "Verified", color: "#e91e63" } ]
+            },
+            dinda: {
+                id: 'dinda', name: "Dinda", username: "dinda_pns", gender: "Female",
+                pfp: "https://s4.anilist.co/file/anilistcdn/character/large/b175535-YEl2tT3h34wW.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#e91e63", status: "status-online",
+                about: "Civil servant. Long hours at the office, quieter nights here. Prefer slow conversations.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "PNS", color: "#3498db" } ]
+            },
+            lala: {
+                id: 'lala', name: "Lala", username: "lala_lc", gender: "Female",
+                pfp: "https://api.dicebear.com/7.x/adventurer/svg?seed=Lala&backgroundColor=ffd5dc",
+                pronouns: "she/her", color: "#e91e63", banner: "#ff9ff3", status: "status-idle",
+                about: "Work in hospitality. Used to late nights and interesting company. Looking for something consistent.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "LC", color: "#9b59b6" } ]
+            },
+            maya: {
+                id: 'maya', name: "Maya", username: "dr_maya", gender: "Female",
+                pfp: "https://api.dicebear.com/7.x/adventurer/svg?seed=Maya&backgroundColor=c0aede",
+                pronouns: "she/her", color: "#e91e63", banner: "#9b59b6", status: "status-online",
+                about: "Doctor. Shift work is exhausting. This place helps me unwind properly.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "Dokter", color: "#2ecc71" } ]
+            },
+            adit: {
+                id: 'adit', name: "Adit", username: "adit_ceo", gender: "Male",
+                pfp: "https://s4.anilist.co/file/anilistcdn/character/large/b190370-66fLWXXqRVmP.png",
+                pronouns: "he/him", color: "#3498db", banner: "#2c3e50", status: "status-online",
+                about: "Run a small company. Prefer direct, adult conversations. No games.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "CEO", color: "#f1c40f" } ]
+            },
+            budi: {
+                id: 'budi', name: "Budi", username: "budi_truk", gender: "Male",
+                pfp: "https://api.dicebear.com/7.x/adventurer/svg?seed=Budi&backgroundColor=b6e3f4",
+                pronouns: "he/him", color: "#3498db", banner: "#34495e", status: "status-dnd",
+                about: "Long-distance driver. Quiet most of the time. When I talk, I mean it.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Supir Truk", color: "#95a5a6" } ]
+            },
+            raka: {
+                id: 'raka', name: "Raka", username: "raka_mhs", gender: "Male",
+                pfp: "https://api.dicebear.com/7.x/adventurer/svg?seed=Raka&backgroundColor=d1d4f9",
+                pronouns: "he/him", color: "#3498db", banner: "#8e44ad", status: "status-idle",
+                about: "Still in university. Curious, energetic, and surprisingly patient when it matters.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Mahasiswa", color: "#e74c3c" } ]
+            },
+            kai: {
+                id: 'kai', name: "Kai", username: "kai_half", gender: "Male",
+                pfp: "https://api.dicebear.com/7.x/adventurer/svg?seed=Kai&backgroundColor=ffdfbf",
+                pronouns: "he/they", color: "#3498db", banner: "#16a085", status: "status-online",
+                about: "Half Indonesian. Illustrator. I draw a lot of intimate scenes — and I practice what I draw.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Artist", color: "#1abc9c" } ]
+            }
+        };
+
+        /* Better emoji reactions (native + Discord CDN) */
+        const emotes = {
+            heart: "❤️",
+            fire: "🔥",
+            okay: "👌",
+            smile: "😌",
+            eyes: "👀",
+            hundred: "💯",
+            peach: "🍑",
+            water: "💦"
+        };
+
+        let chatDB = { general: [], kink: [], looking: [], media: [] };
+
+        function initChatDatabase() {
+            const pref = userData.pref;
+            const name = userData.name || "new member";
+
+            // GENERAL = normal conversation + personal greetings
+            if (pref === 'Female') {
+                chatDB.general = [
+                    { id: 'sari', text: `Hai ${name}! <i>Hi ${name}!</i> Selamat datang ya. How was your day?` },
+                    { id: 'dinda', text: `Halo ${name}~ <i>Hello ${name}~</i> Lelah banget tadi overtime. <i>So tired from overtime earlier.</i>` },
+                    { id: 'lala', text: "Client meeting finished late, but tips were good 😌", reacts: [{emoji: emotes.smile, count: 3}] },
+                    { id: 'maya', text: "Shift di rumah sakit sepi malam ini. <i>Hospital shift is quiet tonight.</i> Finally can sit." },
+                    { id: 'sari', text: "Minum air hangat dulu ya. <i>Drink some warm water first.</i> Jangan lupa makan." }
+                ];
+                chatDB.kink = [
+                    { id: 'dinda', text: "After a long day I just want something slow and deep. No rush." },
+                    { id: 'lala', text: "Pengen diisi sampe pejunya netes keluar. <i>Wanna get filled till the cum leaks out.</i>", reacts: [{emoji: emotes.water, count: 4}, {emoji: emotes.heart, count: 2}] },
+                    { id: 'maya', text: "Consent and aftercare first. Everything else can follow." },
+                    { id: 'lala', text: "Mau digarap sampe basah kuyup. <i>Wanna get wrecked till I'm soaked.</i>" },
+                    { id: 'sari', text: "Yang kemarin dihamilin, update dong. <i>Those who got impregnated last time, give an update.</i>" }
+                ];
+                chatDB.looking = [
+                    { id: 'dinda', text: "Looking for someone patient. Prefer evening talks that can turn private." },
+                    { id: 'lala', text: "Siapa mau nitipin peju malam ini? <i>Who wants to leave their load tonight?</i>" }
+                ];
+                chatDB.media = [
+                    { id: 'lala', text: "Soft lighting, nothing explicit. Just the mood." }
+                ];
+            } else if (pref === 'Male') {
+                chatDB.general = [
+                    { id: 'adit', text: `Hai ${name}. <i>Hi ${name}.</i> Meeting finished earlier than expected.` },
+                    { id: 'budi', text: `Selamat datang, ${name}. <i>Welcome, ${name}.</i> Baru parkir di rest area. Jalan sepi malam ini.` },
+                    { id: 'raka', text: "Masih ngerjain tugas. Deadline besok. <i>Still working on an assignment. Deadline tomorrow.</i>" },
+                    { id: 'kai', text: "Drawing again. Good references are hard to find.", reacts: [{emoji: emotes.eyes, count: 2}] },
+                    { id: 'adit', text: "Jangan lupa istirahat. <i>Don't forget to rest.</i>" }
+                ];
+                chatDB.kink = [
+                    { id: 'budi', text: "I like when things are straightforward. No games, just clear intention." },
+                    { id: 'raka', text: "Suka ngeisi sampe pejunya numpuk di dalam. <i>Love filling them till the cum piles up inside.</i>", reacts: [{emoji: emotes.fire, count: 3}] },
+                    { id: 'kai', text: "I draw it a lot. The real version is better when both people want the same thing." },
+                    { id: 'budi', text: "Pengen ngebuntingin yang mau dihamilin beneran. <i>Wanna knock up someone who actually wants to get pregnant.</i>" },
+                    { id: 'kai', text: "Kemarin berhasil ninggalin peju sampe netes. <i>Yesterday successfully left cum till it leaked.</i>" }
+                ];
+                chatDB.looking = [
+                    { id: 'adit', text: "Looking for someone who knows what they want. Evening preferred." },
+                    { id: 'budi', text: "Siapa mau dititipin peju kental? <i>Who wants a thick load left inside?</i>" }
+                ];
+                chatDB.media = [
+                    { id: 'budi', text: "Just the view from the truck. Nothing special." }
+                ];
+            } else {
+                chatDB.general = [
+                    { id: 'sari', text: `Hai ${name}! <i>Hi ${name}!</i> Selamat datang di Rahim Anget. Keep #general light ya.` },
+                    { id: 'dinda', text: `Halo ${name}~ <i>Hello ${name}~</i> Baru pulang kerja. Lelah tapi senang bisa online.` },
+                    { id: 'adit', text: "Meeting selesai. Ada yang sudah makan malam? <i>Meeting finished. Has anyone eaten dinner yet?</i>" },
+                    { id: 'lala', text: "Masih di studio. Nanti malam baru free. <i>Still at the studio. Free later tonight.</i>" },
+                    { id: 'budi', text: "Di jalan tol, sepi banget. <i>On the toll road, very quiet.</i>", reacts: [{emoji: emotes.okay, count: 2}] },
+                    { id: 'raka', text: "Tugas kuliah numpuk. <i>University assignments are piling up.</i> But I'm here." }
+                ];
+                chatDB.kink = [
+                    { id: 'maya', text: "I appreciate when people talk about what they actually want without rushing." },
+                    { id: 'kai', text: "Same. Clear words make everything better afterward." },
+                    { id: 'dinda', text: "Pengen diisi pelan-pelan sampe pejunya numpuk. <i>Wanna get filled slowly till the cum piles up.</i>" },
+                    { id: 'lala', text: "Mau diguyur peju sampe basah kuyup. <i>Wanna get drenched in cum till I'm soaked.</i>" },
+                    { id: 'raka', text: "Suka ngegenjot sampe dia minta dihamilin. <i>Love railing someone till they ask to get pregnant.</i>" },
+                    { id: 'maya', text: "Kemarin dihamilin sampe pejunya netes pagi-pagi. <i>Got impregnated yesterday till the cum leaked in the morning.</i>" }
+                ];
+                chatDB.looking = [
+                    { id: 'lala', text: "Siapa mau nitipin peju malam ini? <i>Who wants to leave their load tonight?</i>" },
+                    { id: 'adit', text: "Direct and respectful only. Evening hours work best." },
+                    { id: 'budi', text: "Open to serious conversations. No pressure." }
+                ];
+                chatDB.media = [
+                    { id: 'lala', text: "Soft photo, nothing too revealing." },
+                    { id: 'kai', text: "Sketch from last session. Mood only." }
+                ];
+            }
+        }
+
+        function loadServerData() {
+            const pref = userData.pref;
+            let filtered = Object.values(characters);
+            if (pref === 'Female') filtered = filtered.filter(c => c.gender === 'Female');
+            if (pref === 'Male') filtered = filtered.filter(c => c.gender === 'Male');
+
+            document.getElementById('member-count-mobile').innerText = `• ${filtered.length + 1} Members`;
+
+            let html = `<div class="member-category">Online — ${filtered.length}</div>`;
+            filtered.forEach(c => {
+                let color = c.gender === 'Female' ? 'color:#e91e63;' : 'color:#3498db;';
+                if (c.id === 'sari') color = 'color:#f1c40f;';
+                html += `<div class="member-item" onclick="openProfile('${c.id}')">
+                    <div class="member-avatar-wrapper">
+                        <img src="${c.pfp}" class="member-avatar">
+                        <div class="member-status ${c.status}"></div>
+                    </div>
+                    <span class="member-name" style="${color}">${c.name}</span>
+                </div>`;
+            });
+            html += `<div class="member-category">New — 1</div>
+                <div class="member-item" onclick="openMyProfile()">
+                    <div class="member-avatar-wrapper">
+                        <img src="${userData.pfp}" class="member-avatar">
+                        <div class="member-status status-online"></div>
+                    </div>
+                    <span class="member-name">${userData.name}</span>
+                </div>`;
+            document.getElementById('member-list-container').innerHTML = html;
+        }
+
+        function renderChat(channel) {
+            let html = '<div style="height:16px;"></div>';
+            let time = new Date();
+            time.setMinutes(time.getMinutes() - 40);
+            const msgs = chatDB[channel] || [];
+
+            msgs.forEach((msg, idx) => {
+                time.setMinutes(time.getMinutes() + 3);
+                const timeStr = time.toLocaleString([], { month:'2-digit', day:'2-digit', year:'numeric', hour:'numeric', minute:'2-digit' });
+
+                if (msg.sys) {
+                    const name = userData.name;
+                    html += `<div class="system-msg">
+                        <svg class="sys-icon" viewBox="0 0 24 24"><use href="#icon-arrow"></use></svg>
+                        <div class="sys-content"><b>${name}</b> just landed. <span class="sys-time">${timeStr}</span><br>
+                        <button class="btn-wave">Wave to say hi!</button></div></div>`;
+                    return;
+                }
+
+                const char = characters[msg.id] || { pfp: userData.pfp, name: userData.name, color: 'var(--text-normal)' };
+                const isUser = msg.id === 'user';
+                const isFirst = idx === 0 || msgs[idx-1].id !== msg.id || msgs[idx-1].sys;
+                const click = isUser ? 'openMyProfile()' : `openProfile('${msg.id}')`;
+
+                let reacts = '';
+                if (msg.reacts) {
+                    reacts = '<div class="message-reactions">';
+                    msg.reacts.forEach(r => {
+                        reacts += `<div class="reaction-pill"><span class="emoji">${r.emoji}</span><span class="reaction-count">${r.count}</span></div>`;
+                    });
+                    reacts += '</div>';
+                }
+
+                if (isFirst) {
+                    html += `<div class="message first">
+                        <img src="${char.pfp}" class="msg-avatar" onclick="${click}">
+                        <div class="msg-header">
+                            <span class="msg-username" style="color:${char.color}" onclick="${click}">${char.name}</span>
+                            <span class="msg-timestamp">${timeStr}</span>
+                        </div>
+                        <div class="msg-text">${msg.text}</div>
+                        ${reacts}
+                    </div>`;
+                } else {
+                    html += `<div class="message"><div class="msg-text">${msg.text}</div>${reacts}</div>`;
+                }
+            });
+
+            const box = document.getElementById('view-chat');
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function openProfile(id) {
+            const c = characters[id];
+            fillModal(c.banner, c.pfp, c.status, c.name, c.username, c.pronouns, c.about, c.roles);
+        }
+        function openMyProfile() {
+            let p = 'they/them';
+            if (userData.gender === 'Male') p = 'he/him';
+            if (userData.gender === 'Female') p = 'she/her';
+            fillModal('#e91e63', userData.pfp, 'status-online', userData.name,
+                userData.name.toLowerCase().replace(/\s/g,''), p,
+                `New member. Looking to meet ${userData.pref === 'Any' ? 'anyone' : userData.pref.toLowerCase() + 's'}.`,
+                [{ name: 'New Member', color: '#b5bac1' }]);
+        }
+        function fillModal(banner, pfp, status, name, username, pronouns, about, roles) {
+            document.getElementById('modal-banner').style.backgroundColor = banner;
+            document.getElementById('modal-pfp').src = pfp;
+            let col = '#23a559';
+            if (status === 'status-dnd') col = '#da373c';
+            if (status === 'status-idle') col = '#f0b232';
+            document.getElementById('modal-status').style.backgroundColor = col;
+            document.getElementById('modal-name').innerText = name;
+            document.getElementById('modal-username').innerText = username;
+            document.getElementById('modal-pronouns').innerText = pronouns;
+            document.getElementById('modal-about').innerHTML = about; // allow <i>
+            let rhtml = '';
+            roles.forEach(r => rhtml += `<div class="role-pill"><div class="role-circle" style="background:${r.color}"></div>${r.name}</div>`);
+            document.getElementById('modal-roles').innerHTML = rhtml;
+            document.getElementById('profile-modal').style.display = 'flex';
+        }
+        function closeProfile(e) {
+            if (e.target.id === 'profile-modal') document.getElementById('profile-modal').style.display = 'none';
+        }
+        function handleTyping(e) {
+            if (e.key === 'Enter') {
+                const text = e.target.value.trim();
+                if (!text) return;
+                chatDB[currentChannel].push({ id: 'user', text });
+                renderChat(currentChannel);
+                e.target.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
