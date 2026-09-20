@@ -751,7 +751,12 @@
         function switchChannel(channelId, element) {
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-            let text = element.innerText.trim();
+            // Use clean label only (ignore badge "1")
+            const labelEl = element.querySelector('.channel-label');
+            let text = labelEl ? labelEl.innerText.trim() : element.innerText.replace(/\d+$/, '').trim();
+            // Fallback map for channels without label span
+            const nameMap = { rules: 'rules-and-info', general: 'general', kink: 'kink-talk', looking: 'looking-for', media: 'media' };
+            if (nameMap[channelId]) text = nameMap[channelId];
             document.getElementById('current-channel-title').innerText = text;
             document.getElementById('view-chat').style.display = 'none';
             document.getElementById('view-rules').style.display = 'none';
@@ -887,7 +892,7 @@
                     { name: "Contract", color: "#8e44ad" },
                     { name: "Heel Queen", color: "#c0392b" },
                     { name: "VIP", color: "#f1c40f" },
-                    { name: "alpha", color: "#9b59b6" }
+                    { name: "Omega", color: "#9b59b6" }
                 ],
                 dm: "https://janitorai.com/profiles/fc1e939e-e5f6-4d56-9cf9-4f90010a585b_profile-of-jaanedoee"
             }
