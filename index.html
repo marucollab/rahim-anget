@@ -249,6 +249,37 @@
         .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 1px; }
         .msg-username { font-size: 15px; font-weight: 600; color: var(--header-primary); cursor: pointer; line-height: 1.3;}
         .msg-username:hover { text-decoration: underline; }
+        /* Gradient name colors by gender + target */
+        .name-m-any { background: linear-gradient(90deg, #5dade2, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .name-m-fem { background: linear-gradient(90deg, #5dade2, #e91e63); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .name-m-mlm { background: linear-gradient(90deg, #3498db, #1abc9c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .name-f-wlw { background: linear-gradient(90deg, #e91e63, #e67e22); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .name-f-male { background: linear-gradient(90deg, #e91e63, #5dade2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .name-f-any { background: linear-gradient(90deg, #e91e63, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        /* Discord-style reply bar */
+        .msg-reply {
+            display: flex; align-items: center; gap: 3px;
+            font-size: 12px; color: var(--text-muted);
+            margin-bottom: 2px; max-width: 100%;
+            cursor: default; opacity: 0.85;
+            line-height: 1.2;
+        }
+        .msg-reply::before {
+            content: ""; width: 1.5px; height: 11px;
+            background: #4e5058; border-radius: 1px;
+            margin-right: 3px; flex-shrink: 0;
+        }
+        .msg-reply-name { font-weight: 500; color: #b5bac1; margin-right: 3px; font-size: 12px; }
+        .msg-reply-snippet {
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            max-width: 200px; color: var(--text-muted); font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .msg-reply { font-size: 11px; gap: 2px; margin-bottom: 1px; }
+            .msg-reply::before { height: 10px; width: 1.5px; margin-right: 2px; }
+            .msg-reply-name { font-size: 11px; }
+            .msg-reply-snippet { max-width: 140px; font-size: 11px; }
+        }
         .msg-timestamp { font-size: 11px; color: var(--text-muted); font-weight: 500; opacity: 0.85;}
         .msg-text { font-size: 15px; line-height: 1.45; color: var(--text-normal); font-weight: 400;}
 
@@ -646,8 +677,8 @@
                 <div class="server-info-desc">Private community for adults who share specific interests. Invite-only. No judgment.</div>
                 <div class="server-info-badges">
                     <span class="server-badge">Community</span>
-                    <span class="server-badge">● 6 Online</span>
-                    <span class="server-badge">7 Members</span>
+                    <span class="server-badge server-badge-online">● 18 Online</span>
+                    <span class="server-badge server-badge-members">29 Members</span>
                 </div>
             </div>
             <div class="server-info-body">
@@ -786,6 +817,7 @@
         const characters = {
             nathan: {
                 id: 'nathan', name: "pro injector 💉", username: "drnkalandra", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/nathan",
                 pronouns: "he/him", color: "#3498db", banner: "#1a5276", status: "status-online",
                 about: "Obstetrician. Fertility specialist.\nNot looking for anything emotional.",
@@ -800,6 +832,7 @@
             },
             rudi: {
                 id: 'rudi', name: "pak rudi sayang istri 🚛", username: "rudiiiiiii", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/rudi",
                 pronouns: "he/him", color: "#3498db", banner: "#5d6d7e", status: "status-online",
                 about: "Truck Driver. I love my wife.\n#1 in my heart is my MBG (my mine bini gweh)",
@@ -814,6 +847,7 @@
             },
             dosen: {
                 id: 'dosen', name: "Mas_Dosen", username: "Ashfall", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_00000000c16881f5b4428877c3b583ff.png",
                 pronouns: "he/him", color: "#3498db", banner: "#6c3483", status: "status-idle",
                 about: "Lecturer by day, lurker by night. 🏛️☕",
@@ -828,6 +862,7 @@
             },
             dicka: {
                 id: 'dicka', name: "Dick(a)", username: "adicktion", gender: "Male", targetUser: "Male",
+                nameClass: "name-m-mlm",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/IMG-20260914-WA0137.jpg",
                 pronouns: "he/him", color: "#3498db", banner: "#1c2833", status: "status-dnd",
                 about: "Pro dickology. Eye bags make me hotter.\nLooking for fun not intimacy.",
@@ -842,6 +877,7 @@
             },
             ved: {
                 id: 'ved', name: "ved.", username: "radiancetrash", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/ChatGPT_Image_Sep_14_2026_04_46_06_PM.png",
                 pronouns: "he/him", color: "#3498db", banner: "#117a65", status: "status-online",
                 about: "if you can't handle a cocky asshole with good a dih, move along.",
@@ -856,6 +892,7 @@
             },
             bee: {
                 id: 'bee', name: "🐝", username: "bitterbita", gender: "Female", targetUser: "Male",
+                nameClass: "name-f-male",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260915_064402.png",
                 pronouns: "she/her", color: "#e91e63", banner: "#f5b7b1", status: "status-online",
                 about: "24f. No clingy stuff",
@@ -870,6 +907,7 @@
             },
             ava: {
                 id: 'ava', name: "Ava", username: "moonnvyl", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_000000008e3c81f789221ebb4cedfc58.png",
                 pronouns: "she/her", color: "#e91e63", banner: "#4a235a", status: "status-online",
                 about: "don't bother, I always get what I want. u can try so hard to runaway, but we both know how this ends.",
@@ -884,6 +922,7 @@
             },
             anita: {
                 id: 'anita', name: "d.anita", username: "Dellawiratama", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
                 pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_0000000022a8821185fe60047aa9de9f.png",
                 pronouns: "she/her", color: "#e91e63", banner: "#1c2833", status: "status-idle",
                 about: "\"You signed the contract then you will be my canvas for my art. now learn your place under my heels.\"",
@@ -892,9 +931,199 @@
                     { name: "Contract", color: "#8e44ad" },
                     { name: "Heel Queen", color: "#c0392b" },
                     { name: "VIP", color: "#f1c40f" },
-                    { name: "Alpha", color: "#9b59b6" }
+                    { name: "Omega", color: "#9b59b6" }
                 ],
                 dm: "https://janitorai.com/profiles/fc1e939e-e5f6-4d56-9cf9-4f90010a585b_profile-of-jaanedoee"
+            },
+            // ===== NEW BATCH =====
+            velvet: {
+                id: 'velvet', name: "Velvet Mist", username: "v_room20", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-09-03-15-39-12-1femaleth-1704999408-0.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#4a235a", status: "status-online",
+                about: "Beauty clinic owner. Landlady. Watching, collecting, and keeping what’s mine in Room 20.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "High Priestess", color: "#9b59b6" }, { name: "Landlady", color: "#8e44ad" }, { name: "Silent Stalker", color: "#2c3e50" }, { name: "Item Thief", color: "#e74c3c" } ],
+                dm: "https://janitorai.com/profiles/b73a009c-294d-470a-8650-9a3aba011d64_profile-of-wolfiell"
+            },
+            sanctuary: {
+                id: 'sanctuary', name: "nenen gratis khusus istri 🤱🏻", username: "dr.sanctuary", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-08-29-05-31-20-ImageStyle-3482372421-1.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#f5b7b1", status: "status-online",
+                about: "Specialist Physician based in Vienna 🩺\nI take good care of my wife. She’s fully fed and cherished. 🍼🤍",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "Doctor", color: "#2ecc71" }, { name: "Wife Enthusiast", color: "#e91e63" }, { name: "Milky Mother", color: "#f1c40f" }, { name: "VIP", color: "#9b59b6" } ],
+                dm: "https://janitorai.com/profiles/b73a009c-294d-470a-8650-9a3aba011d64_profile-of-wolfiell"
+            },
+            nenenholic: {
+                id: 'nenenholic', name: "nenenholic", username: "louvemoon", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_00000000bb248208a19926afe3beaba7.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#ff9ff3", status: "status-idle",
+                about: "21yo architecture student 📐☕️ In love with older women & boobs 🤱🏻🍼✨\nJust a needy girl craving for her favorite mommy 🧎‍♀️🤍",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "Boobs Enjoyer", color: "#e91e63" }, { name: "Mommy's Girl", color: "#9b59b6" }, { name: "Needy", color: "#f1c40f" } ],
+                dm: "https://janitorai.com/profiles/b73a009c-294d-470a-8650-9a3aba011d64_profile-of-wolfiell"
+            },
+            ombengkel: {
+                id: 'ombengkel', name: "OmBengkel_69", username: "yanto_bengkel", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/export202609201956050157.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#5d6d7e", status: "status-online",
+                about: "Looking for people who actually want to be filled properly. No condoms, no Plan B, no waste. If you just want talk, stay in #general. If you want more, DM.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "No Rubber", color: "#e74c3c" }, { name: "Multi Round", color: "#e67e22" }, { name: "Neighbor", color: "#95a5a6" } ],
+                dm: "https://janitorai.com/profiles/d16c8103-1790-4af6-8018-1eadde2bbb68_profile-of-tiffa-neko"
+            },
+            oniigalih: {
+                id: 'oniigalih', name: "OniiGalih", username: "isekaireject", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-09-24-08-55-14-Semi-reali-2105760578-11.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#2c3e50", status: "status-dnd",
+                about: "✦ alone because women don't understand me ✦\n失望した。世の中は不公平だ。",
+                roles: [ { name: "MOD", color: "#f1c40f" }, { name: "Hentai", color: "#e91e63" }, { name: "Wibu", color: "#9b59b6" }, { name: "Verified", color: "#3498db" }, { name: "Ahegao", color: "#e74c3c" } ],
+                dm: "https://janitorai.com/profiles/d16c8103-1790-4af6-8018-1eadde2bbb68_profile-of-tiffa-neko"
+            },
+            bmoist: {
+                id: 'bmoist', name: "B-Moist", username: "Bimoli_", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260921_195451.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#1abc9c", status: "status-online",
+                about: "OG panty sniffer. No DMs unless you wanna sell or buy something 🫡\nKleptomania? Nah. Pantymania.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Panty Sniffer", color: "#e91e63" }, { name: "Klepto", color: "#8e44ad" }, { name: "Collector", color: "#9b59b6" } ],
+                dm: "https://janitorai.com/profiles/46d4fda8-565e-4384-bc2d-e5831a4397f7_profile-of-moexran"
+            },
+            rawrka: {
+                id: 'rawrka', name: "Rawrka", username: "Rururara", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/50fdf9ef-3c82-4ebf-ab59-9803b1ce6ba8.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#34495e", status: "status-idle",
+                about: "Just a normal guy. Nothing to see here.👍\nMy girlfriend doesn't know I'm here. So shhh",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Normal Guy", color: "#95a5a6" }, { name: "Secret", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/46d4fda8-565e-4384-bc2d-e5831a4397f7_profile-of-moexran"
+            },
+            lubang: {
+                id: 'lubang', name: "r.lubang.bisul", username: "neneninaku", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/ChatGPT_Image_18_Sep_2026_03.10.38.png",
+                pronouns: "he/him", color: "#3498db", banner: "#e67e22", status: "status-online",
+                about: "Ojol driver. Only ping me if you have great tits.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Ojol", color: "#e67e22" }, { name: "Tit Enjoyer", color: "#e91e63" }, { name: "Seblak", color: "#f1c40f" } ],
+                dm: "https://janitorai.com/profiles/d296d132-848b-4b87-a587-aeb982cf2e13_profile-of-byonism"
+            },
+            pakwira: {
+                id: 'pakwira', name: "Pak Wira", username: "kostwira", gender: "Male", targetUser: "Male",
+                nameClass: "name-m-mlm",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-09-25-08-31-26-Portraitc-145633627884335-1.png",
+                pronouns: "he/him", color: "#3498db", banner: "#1a5276", status: "status-online",
+                about: "Kost Wira ─ Jakarta.\nTerima kost cowok dan cewek.\nJapandi style. Bersih, nyaman, dan aman.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Kost Owner", color: "#27ae60" }, { name: "Breeder", color: "#e74c3c" }, { name: "Old Man", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/ce46e0e9-267d-4cfc-8183-5f117545755c_profile-of-lueringlian"
+            },
+            mamimay: {
+                id: 'mamimay', name: "Mami May", username: "Mayschu", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260922_111435.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#c0392b", status: "status-online",
+                about: "Boys stay away #ewh, my moan and vids are for the girlies, #staymad.\nDm/ping free for the girls.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "Jamu Queen", color: "#27ae60" }, { name: "Love Potion", color: "#9b59b6" }, { name: "Girlies Only", color: "#e91e63" } ],
+                dm: "https://janitorai.com/profiles/9f9565ae-5b63-4f9d-88c9-e0fca1f20403_profile-of-mokkanextdoor"
+            },
+            arang: {
+                id: 'arang', name: "arang", username: "nanabuildmm", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/1790343155748.png",
+                pronouns: "he/him", color: "#3498db", banner: "#2c3e50", status: "status-online",
+                about: "@ me for mabar.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "ML Player", color: "#3498db" }, { name: "Angkringan", color: "#e67e22" }, { name: "Mouth Weak", color: "#e91e63" } ],
+                dm: "https://janitorai.com/profiles/9f9565ae-5b63-4f9d-88c9-e0fca1f20403_profile-of-mokkanextdoor"
+            },
+            arka: {
+                id: 'arka', name: "CEO of sawit", username: "arkaz", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/73c74045-a112-4f93-82e5-443f3fb2f42d.png",
+                pronouns: "he/him", color: "#3498db", banner: "#1c2833", status: "status-dnd",
+                about: "ytta, just call me arka. old enough to be ur uncle.\nif i reply late = working. or forgot.\nping ok. don't dm me unless i dm u first.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Sawit CEO", color: "#27ae60" }, { name: "Brat Tamer", color: "#e74c3c" }, { name: "Uncle", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/db9f6780-d73e-4486-9a5a-69db014794ad_profile-of-geodyne"
+            },
+            void31: {
+                id: 'void31', name: "Void_31", username: "shadow_arch69", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/8b8b17614ee124a9d2a40fdd5fb488c8.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#2c3e50", status: "status-idle",
+                about: "Just a normal guy who works hard and plays harder. Here to unwind and speak freely. DMs are open if you can keep up.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "VIP", color: "#f1c40f" }, { name: "Heavy Lurker", color: "#7f8c8d" }, { name: "Cheat Code", color: "#e74c3c" } ],
+                dm: "https://janitorai.com/profiles/dc16a95e-e384-4e7f-92b8-32d161e5d55f_profile-of-sky-wings"
+            },
+            subiantok: {
+                id: 'subiantok', name: "Subiantok", username: "subianto02", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/Gemini_Generated_Image_fdcmxgfdcmxgfdcm.jpg",
+                pronouns: "he/him", color: "#3498db", banner: "#34495e", status: "status-online",
+                about: "keep your submissions clean and your minds filthy.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Rater", color: "#9b59b6" }, { name: "Filthy Mind", color: "#e74c3c" }, { name: "Office", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/3471e46c-551a-4304-a27f-70faf93dd493_profile-of-bellla"
+            },
+            hindia: {
+                id: 'hindia', name: "hindia (bukan penyanyi)", username: "seluas_samudra", gender: "Male", targetUser: "Male",
+                nameClass: "name-m-mlm",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/media_1790519118.png",
+                pronouns: "he/him", color: "#3498db", banner: "#16a085", status: "status-online",
+                about: "DNI if you’re fatphobic. Cintaku untuk Pak Satpam seluas samudra (haha get it) dan sedalam bo'ol-nya once I’m done with him 😚",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Satpam Lover", color: "#27ae60" }, { name: "MLM", color: "#3498db" }, { name: "Feeder", color: "#e67e22" } ],
+                dm: "https://janitorai.com/profiles/1a428ddf-b08b-4d3e-b04d-b012f5ce3f9f_profile-of-burnedwarehouse"
+            },
+            puspa: {
+                id: 'puspa', name: "Puspa 🌷", username: "puspasaja1007", gender: "Female", targetUser: "Female",
+                nameClass: "name-f-wlw",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260927_183232.jpg",
+                pronouns: "she/her", color: "#e91e63", banner: "#e91e63", status: "status-online",
+                about: "Single. No protection needed with me.",
+                roles: [ { name: "Verified", color: "#e91e63" }, { name: "No Protection", color: "#e74c3c" }, { name: "Free Tonight", color: "#f1c40f" } ],
+                dm: "https://janitorai.com/profiles/1a428ddf-b08b-4d3e-b04d-b012f5ce3f9f_profile-of-burnedwarehouse"
+            },
+            gama: {
+                id: 'gama', name: "Gama", username: "g_aryasuta", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_00000000871081fabbf7ed83632bb44c.png",
+                pronouns: "he/him", color: "#3498db", banner: "#2c3e50", status: "status-online",
+                about: "Senior Automotive Sales Executive. Tired 24/7.",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Sales Exec", color: "#3498db" }, { name: "Milk Helper", color: "#e91e63" }, { name: "Tired", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/3b0bd639-63c6-4f62-a285-8e00e0a280d6_profile-of-aerisbelle"
+            },
+            renjana: {
+                id: 'renjana', name: "Mas Renjana", username: "renjana_sanskara", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/file_000000008df48207987e5afa4da170ce.png",
+                pronouns: "he/him", color: "#3498db", banner: "#6c3483", status: "status-idle",
+                about: "Trah Sanskara. Sugeng rahayu. (Greetings of peace.)",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "Spiritual", color: "#9b59b6" }, { name: "Seed Planter", color: "#e74c3c" }, { name: "Aura", color: "#8e44ad" } ],
+                dm: "https://janitorai.com/profiles/3b0bd639-63c6-4f62-a285-8e00e0a280d6_profile-of-aerisbelle"
+            },
+            helios: {
+                id: 'helios', name: "Helios (Rafly)", username: "helios_va524", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://api.dicebear.com/7.x/initials/svg?seed=H&backgroundColor=f0b232",
+                pronouns: "he/him", color: "#3498db", banner: "#f0b232", status: "status-online",
+                about: "Corporate slave by day, getting you wet at night ;) DMs open for collabs",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "VA", color: "#9b59b6" }, { name: "Collab", color: "#e91e63" }, { name: "Choking", color: "#e74c3c" } ],
+                dm: "#"
+            },
+            maharaja: {
+                id: 'maharaja', name: "MAHARAJA RAGI", username: "SsaragiLUV", gender: "Male", targetUser: "Any",
+                nameClass: "name-m-any",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/image%20(2).png",
+                pronouns: "he/him", color: "#3498db", banner: "#c0392b", status: "status-online",
+                about: "24, Do not ask me about my body count. my DM are open to have fun (˵ ¬ᴗ¬˵)",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "For Hire", color: "#f1c40f" }, { name: "Brutal", color: "#e74c3c" }, { name: "Broke", color: "#7f8c8d" } ],
+                dm: "https://janitorai.com/profiles/550c9b17-342c-479b-8c3a-7ce0a35dfb99_profile-of-arialtofox"
+            },
+            sal: {
+                id: 'sal', name: "saL", username: "SaLSoundVA", gender: "Male", targetUser: "Male",
+                nameClass: "name-m-mlm",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/image%20(3).png",
+                pronouns: "he/him", color: "#3498db", banner: "#8e44ad", status: "status-online",
+                about: "I wish I have someone as tight as my schedule rn, ngh~",
+                roles: [ { name: "Verified", color: "#3498db" }, { name: "VA", color: "#9b59b6" }, { name: "Cucking", color: "#e91e63" }, { name: "Campus", color: "#3498db" } ],
+                dm: "https://janitorai.com/profiles/550c9b17-342c-479b-8c3a-7ce0a35dfb99_profile-of-arialtofox"
             }
         };
 
@@ -931,6 +1160,7 @@
             chatDB.looking = [];
             chatDB.media = [];
 
+            // original batch
             const showN = canShow(characters.nathan);
             const showR = canShow(characters.rudi);
             const showD = canShow(characters.dosen);
@@ -939,102 +1169,405 @@
             const showB = canShow(characters.bee);
             const showA = canShow(characters.ava);
             const showI = canShow(characters.anita);
+            // new batch
+            const showVelvet = canShow(characters.velvet);
+            const showSanct = canShow(characters.sanctuary);
+            const showNenen = canShow(characters.nenenholic);
+            const showOm = canShow(characters.ombengkel);
+            const showOnii = canShow(characters.oniigalih);
+            const showBmoist = canShow(characters.bmoist);
+            const showRawr = canShow(characters.rawrka);
+            const showLubang = canShow(characters.lubang);
+            const showWira = canShow(characters.pakwira);
+            const showMay = canShow(characters.mamimay);
+            const showArang = canShow(characters.arang);
+            const showArka = canShow(characters.arka);
+            const showVoid = canShow(characters.void31);
+            const showSubi = canShow(characters.subiantok);
+            const showHindia = canShow(characters.hindia);
+            const showPuspa = canShow(characters.puspa);
+            const showGama = canShow(characters.gama);
+            const showRen = canShow(characters.renjana);
+            const showHelios = canShow(characters.helios);
+            const showRagi = canShow(characters.maharaja);
+            const showSal = canShow(characters.sal);
 
-            // ========== #general — natural back-and-forth ==========
+            // ========== #general — threaded back-and-forth ==========
             if (showN) {
-                chatDB.general.push({ id: 'nathan', text: `welcome ${name}`, reacts: [{emoji: "👋🏽", count: 3}] });
+                chatDB.general.push({id: 'nathan', text: `welcome ${name}`,
+                    reacts: [{emoji: "🫶", count: 10}, {emoji: "✨", count: 9}]});
             }
             if (showA) {
-                chatDB.general.push({ id: 'ava', text: `hai ${name}~`, reacts: [{emoji: "👋🏽", count: 2}] });
+                chatDB.general.push({id: 'ava', text: `hai ${name}~`,
+                    reacts: [{emoji: "👋🏽", count: 9}, {emoji: "🫶", count: 6}, {emoji: "✨", count: 4}]});
             }
             if (showB) {
-                chatDB.general.push({ id: 'bee', text: `hey ${name}`, reacts: [{emoji: "👋🏽", count: 1}] });
+                chatDB.general.push({id: 'bee', text: `haloo ${name}`,
+                    reacts: [{emoji: "🫶", count: 7}, {emoji: "✨", count: 5}]});
             }
             if (showK) {
-                chatDB.general.push({ id: 'dicka', text: `yo ${name}`, reacts: [{emoji: "👋🏽", count: 2}] });
+                chatDB.general.push({id: 'dicka', text: `yo ${name}`,
+                    reacts: [{emoji: "✨", count: 8}, {emoji: "🫶", count: 6}, {emoji: "👋🏽", count: 4}]});
             }
 
             if (showR) {
-                chatDB.general.push({ id: 'rudi', text: "Selamat pagi,,, baru turun dari truk,,, istri gue langsung telepon 🥰 katanya kangen 👍🏻 <i>Good morning,,, just got off the truck,,, wife called right away 🥰 said she misses me 👍🏻</i>", reacts: [{emoji: "😒", count: 4}] });
-                if (showV) chatDB.general.push({ id: 'ved', text: "anjing rudi tiap hari cerita istri. gue iri tapi males ngaku. <i>damn rudi talks about his wife every day. i'm jealous but won't admit it.</i>", reacts: [{emoji: "😂", count: 3}] });
-                 }
+                chatDB.general.push({id: 'rudi', text: "Selamat pagi,,, baru turun dari truk,,, istri gue langsung telepon 🥰 katanya kangen 👍🏻 <i>Good morning,,, just got off the truck,,, wife called right away 🥰 said she misses me 👍🏻</i>",
+                    reacts: [{emoji: "😒", count: 6}, {emoji: "👋🏽", count: 4}]});
+                if (showV) chatDB.general.push({id: 'ved', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "Selamat pagi,,, baru turun dari truk..." }, text: "anjing rudi tiap hari cerita istri. gue iri tapi males ngaku. <i>damn rudi talks about his wife every day. i'm jealous but won't admit it.</i>",
+                    reacts: [{emoji: "❤️", count: 8}, {emoji: "🤣", count: 8}, {emoji: "☝🏻", count: 4}]});
+                if (showD) chatDB.general.push({id: 'dosen', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "istri gue langsung telepon..." }, text: "rudi gila. gue masih ngoreksi tugas jam segini. <i>rudi is crazy. i'm still grading papers at this hour.</i>",
+                    reacts: [{emoji: "🤍", count: 10}, {emoji: "😭", count: 5}, {emoji: "🚛", count: 4}]});
+            }
 
+            if (showV) {
+                chatDB.general.push({id: 'ved', text: "jalanan macet banget jam segini, beneran bikin emosi. <i>traffic is fucked up at this hour, actually pisses me off.</i>",
+                    reacts: [{emoji: "💼", count: 9}, {emoji: "☕", count: 8}, {emoji: "😤", count: 8}]});
+                if (showK) chatDB.general.push({id: 'dicka', replyTo: { name: "ved.", snippet: "jalanan macet banget jam segini..." }, text: "biasa. jakarta mah gitu. lo masih di jalan? <i>normal. jakarta is like that. still on the road?</i>",
+                    reacts: [{emoji: "🤍", count: 5}, {emoji: "💕", count: 4}]});
+            }
 
             if (showN) {
-                chatDB.general.push({ id: 'nathan', text: "stok pil kontrasepsi dan penyubur baru datang. kalau butuh langsung chat. jangan beli sembarangan di luar. <i>new stock of birth control and fertility pills just arrived. if you need any, chat me. don’t buy randomly outside.</i>", reacts: [{emoji: "💊", count: 2}] });
-                if (showD) chatDB.general.push({ id: 'dosen', text: "siap. gw butuh yang penyubur juga. <i>got it. i need the fertility ones too.</i>", reacts: [{emoji: "👀", count: 2}] });
-            }
-            if (showV) {
-                chatDB.general.push({ id: 'ved', text: "jalanan macet banget jam segini, beneran bikin emosi. <i>traffic is fucked up at this hour, actually pisses me off.</i>", reacts: [{emoji: "✅", count: 6}] });
-                if (showK) chatDB.general.push({ id: 'dicka', text: "biasa. jakarta mah gitu. lo masih di jalan? <i>normal. jakarta is like that. still on the road?</i>" });
+                chatDB.general.push({id: 'nathan', text: "stok pil kontrasepsi dan penyubur baru datang. kalau butuh langsung chat. jangan beli sembarangan di luar. <i>new stock of birth control and fertility pills just arrived. if you need any, chat me. don’t buy randomly outside.</i>",
+                    reacts: [{emoji: "😂", count: 10}, {emoji: emotes.fire, count: 8}, {emoji: emotes.eyes, count: 4}]});
+                if (showD) chatDB.general.push({id: 'dosen', replyTo: { name: "pro injector 💉", snippet: "stok pil kontrasepsi dan penyubur..." }, text: "siap. gw butuh yang penyubur juga. <i>got it. i need the fertility ones too.</i>",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.eyes, count: 7}, {emoji: "😂", count: 4}]});
             }
 
             if (showA) {
-                chatDB.general.push({ id: 'ava', text: "layering outer tadi liat di ootd channel... style dia sebenernya lumayan, which is rare, tp layering nya off bgt LMAO <i>saw the layering in ootd channel... her style is actually quite good, which is rare, but the layering is really off LMAO</i>", reacts: [{emoji: "💅", count: 2}] });
-                if (showI) chatDB.general.push({ id: 'anita', text: "agree. half-assed effort. keep up or get out.", reacts: [{emoji: "🖤", count: 1}] });
+                chatDB.general.push({id: 'ava', text: "layering outer tadi liat di ootd channel... style dia sebenernya lumayan, which is rare, tp layering nya off bgt LMAO <i>saw the layering in ootd channel... her style is actually quite good, which is rare, but the layering is really off LMAO</i>",
+                    reacts: [{emoji: emotes.eyes, count: 8}, {emoji: "😂", count: 7}, {emoji: emotes.fire, count: 6}]});
+                if (showI) chatDB.general.push({id: 'anita', replyTo: { name: "Ava", snippet: "layering outer tadi liat di ootd..." }, text: "agree. half-assed effort. keep up or get out.",
+                    reacts: [{emoji: emotes.eyes, count: 8}, {emoji: emotes.fire, count: 7}]});
             }
 
             if (showI && !showA) {
-                chatDB.general.push({ id: 'anita', text: "quality over quantity. always.", reacts: [{emoji: "🖤", count: 1}] });
+                chatDB.general.push({id: 'anita', text: "quality over quantity. always.",
+                    reacts: [{emoji: "😂", count: 8}, {emoji: emotes.eyes, count: 7}]});
             }
 
             if (showB) {
-                chatDB.general.push({ id: 'bee', text: "lagi chillin. face verify dulu kalau mau chat. <i>just chilling. face verify first if you want to chat.</i>" });
+                chatDB.general.push({id: 'bee', text: "lagi chillin. face verify dulu kalau mau chat. <i>just chilling. face verify first if you want to chat.</i>",
+                    reacts: [{emoji: emotes.fire, count: 5}, {emoji: emotes.eyes, count: 5}]});
             }
 
             // ========== #kink-talk — long, filthy, in-character ==========
             if (showR) {
-                chatDB.kink.push({ id: 'rudi', text: "gue mah sederhana,,, yang penting istri terus diisi 🤤 anak banyak jg ttp gue hamilin lagi ☝🏻☝🏻 <i>i’m a simple man,,, what matters is my wife keeps getting filled 🤤 even with many kids i’ll still get her pregnant again ☝🏻☝🏻</i>", reacts: [{emoji: emotes.fire, count: 3}] });
+                chatDB.kink.push({id: 'rudi', text: "simple aja, gue mah sederhana,,, yang penting istri terus diisi 🤤 anak banyak jg ttp gue hamilin lagi ☝🏻☝🏻 <i>i’m a simple man,,, what matters is my wife keeps getting filled 🤤 even with many kids i’ll still get her pregnant again ☝🏻☝🏻</i>",
+                    reacts: [{emoji: "🫡", count: 9}, {emoji: "💦", count: 8}, {emoji: "🥰", count: 5}]});
             }
             if (showV) {
-                chatDB.kink.push({ id: 'ved', text: "when she just takes it all without complaining. seisi-isinya dikeluarin di dalem ampe meluber itu hits different anjeeeeeng. <i>when she just takes it all without complaining. dumping every single drop inside till it spills out hits different, holy fuuuuck.</i>", reacts: [{emoji: emotes.water, count: 4}, {emoji: emotes.fire, count: 2}] });
+                chatDB.kink.push({id: 'ved', text: "real one, when she just takes it all without complaining. seisi-isinya dikeluarin di dalem ampe meluber itu hits different anjeeeeeng. <i>when she just takes it all without complaining. dumping every single drop inside till it spills out hits different, holy fuuuuck.</i>",
+                    reacts: [{emoji: emotes.eyes, count: 10}, {emoji: "😂", count: 5}]});
             }
             if (showD) {
-                chatDB.kink.push({ id: 'dosen', text: "Sumpah, aroma kasur pas ditinggal dia pulang tadi subuh masih kecium bau khas lendirnya candu banget. <i>Swear to God, the smell of the bed right after she left early this morning still has that distinct scent of her body fluids, it's so addictive.</i>", reacts: [{emoji: emotes.fire, count: 2}] });
-                chatDB.kink.push({ id: 'dosen', text: "Lagi nunggu momen pas dia lengah. Sengaja gak pake pengaman dengan dalih 'khilaf dikit' pas lagi panas-panasnya. Biar dia panik dikit, terus langsung gampang gw desak buat cepet-cepet nikah biar bisa dibuntingin tiap hari. 🙂 <i>Damn it, just waiting for a moment when she drops her guard. I purposely didn't use protection under the guise of a 'small lapse in judgment' while things were heated. Just to make her panic a bit, so I can easily pressure her into marrying me right away so I can knock her up every day. 🙂</i>", reacts: [{emoji: emotes.fire, count: 3}] });
+                chatDB.kink.push({id: 'dosen', text: "lanjut, “Sumpah, aroma kasur pas ditinggal dia pulang tadi subuh masih kecium bau khas lendirnya candu banget.\" <i>Swear to God, the smell of the bed right after she left early this morning still has that distinct scent of her body fluids, it's so addictive.</i>",
+                    reacts: [{emoji: "🍼", count: 8}, {emoji: "💕", count: 5}, {emoji: "🤍", count: 5}]});
+                chatDB.kink.push({id: 'dosen', text: "\"Sialan, lagi nunggu momen pas dia lengah. Sengaja gak pake pengaman dengan dalih 'khilaf dikit' pas lagi panas-panasnya. Biar dia panik dikit, terus langsung gampang gw desak buat cepet-cepet nikah biar bisa dibuntingin tiap hari. 🙂\" <i>Damn it, just waiting for a moment when she drops her guard. I purposely didn't use protection under the guise of a 'small lapse in judgment' while things were heated. Just to make her panic a bit, so I can easily pressure her into marrying me right away so I can knock her up every day. 🙂</i>",
+                    reacts: [{emoji: "😂", count: 10}, {emoji: emotes.eyes, count: 7}, {emoji: emotes.fire, count: 6}]});
             }
             if (showK) {
-                chatDB.kink.push({ id: 'dicka', text: "nyenyenyenye vanilla bosenin banget goblok, ewh. gue mah suka yang kasar, nangis dikit malah makin enak. <i>blablabla, vanilla is boring asf, ewh. i like it rough, a little crying makes it even better.</i>", reacts: [{emoji: emotes.fire, count: 2}] });
+                chatDB.kink.push({id: 'dicka', text: "hot take, nyenyenyenye vanilla bosenin banget goblok, ewh. gue mah suka yang kasar, nangis dikit malah makin enak. <i>blablabla, vanilla is boring asf, ewh. i like it rough, a little crying makes it even better.</i>",
+                    reacts: [{emoji: "😭", count: 6}, {emoji: "😂", count: 5}]});
             }
             if (showA) {
-                chatDB.kink.push({ id: 'ava', text: "at the end of the day, dia bakal meluk kaki gwa sambil nangis-nangis minta ampun. And I love seeing that desperate look on her, bikin gwa makin pengen ngancurin dia ampe ga bersisa. <i>At the end of the day, she will hug my feet while crying for forgiveness. And I love seeing that desperate look on her, makes me want to destroy her even more until there's nothing left.</i>", reacts: [{emoji: emotes.fire, count: 3}] });
+                chatDB.kink.push({id: 'ava', text: "honestly, at the end of the day, dia bakal meluk kaki gwa sambil nangis-nangis minta ampun. And I love seeing that desperate look on her, bikin gwa makin pengen ngancurin dia ampe ga bersisa. <i>At the end of the day, she will hug my feet while crying for forgiveness. And I love seeing that desperate look on her, makes me want to destroy her even more until there's nothing left.</i>",
+                    reacts: [{emoji: "😈", count: 8}, {emoji: "🖤", count: 7}, {emoji: emotes.fire, count: 6}]});
             }
             if (showI) {
-                chatDB.kink.push({ id: 'anita', text: "Kneel. Dia udah tanda tangan kontrak dan jual kebebasannya ke aku, ingat? Sekarang jadi sub yang penurut dan lepas pakaiannya sebelum aku hilang kesabaran. <i>Kneel. She signed the contract and sold her freedom to me, remember? Now be a good sub and take off her clothes before I lose my patience.</i>", reacts: [{emoji: "🖤", count: 2}, {emoji: emotes.fire, count: 1}] });
+                chatDB.kink.push({id: 'anita', text: "listen, Kneel. Dia udah tanda tangan kontrak dan jual kebebasannya ke aku, ingat? Sekarang jadi sub yang penurut dan lepas pakaiannya sebelum aku hilang kesabaran. <i>Kneel. She signed the contract and sold her freedom to me, remember? Now be a good sub and take off her clothes before I lose my patience.</i>",
+                    reacts: [{emoji: "🖤", count: 10}, {emoji: "😈", count: 4}]});
+            }
+
+            // crude cross-reactions with reply bars
+            if (showR && showV) {
+                chatDB.kink.push({id: 'ved', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "gue mah sederhana,,, yang penting istri terus diisi..." }, text: "anjing rudi gila banget sama istrinya. gue juga mau yang gitu, diisi sampe pejunya netes. <i>fuck rudi is insane about his wife. i want that too, filled till the cum leaks out.</i>",
+                    reacts: [{emoji: "🥰", count: 9}, {emoji: "💕", count: 8}, {emoji: "❤️", count: 5}]});
+            }
+            if (showD && showV) {
+                chatDB.kink.push({id: 'ved', replyTo: { name: "Mas_Dosen", snippet: "Sengaja gak pake pengaman dengan dalih 'khilaf dikit'..." }, text: "dosen gila. sengaja biarin panik biar gampang dibuntingin. respect. <i>dosen is crazy. purposely letting her panic so she's easy to knock up. respect.</i>",
+                    reacts: [{emoji: "😭", count: 9}, {emoji: "😂", count: 4}]});
+            }
+            if (showA && showI) {
+                chatDB.kink.push({id: 'anita', replyTo: { name: "Ava", snippet: "at the end of the day, dia bakal meluk kaki gwa..." }, text: "same. contract first, then she learns where she belongs.",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: "🖤", count: 4}]});
             }
 
             // ========== #looking-for ==========
             if (showN) {
-                chatDB.looking.push({ id: 'nathan', text: "looking for a female patient who needs consistent 'injections'. must be able to follow instructions and stay still.", reacts: [{emoji: emotes.eyes, count: 2}] });
+                chatDB.looking.push({id: 'nathan', text: "looking for a female patient who needs consistent 'injections'. must be able to follow instructions and stay still.",
+                    reacts: [{emoji: "😳", count: 10}, {emoji: emotes.eyes, count: 7}]});
             }
             if (showD) {
-                chatDB.looking.push({ id: 'dosen', text: "Ada yang punya rekomendasi pil penyubur buat cewek? Pacar gw yang polos ini makin hari badannya makin seksi pas gw 'ajarin' service malem-malem. Pengen cepet-cepet kebablasan biar sah gw kurung di rumah terus 🙏🏻🙂. <i>Anyone have any recommendations for fertility pills for girls? This innocent girlfriend of mine is getting sexier day by day as I 'teach' her how to give nighttime service. I want her to 'accidentally' get pregnant soon so she's legally mine to keep locked up at home 🙏🏻🙂</i>", reacts: [{emoji: emotes.eyes, count: 3}] });
+                chatDB.looking.push({id: 'dosen', text: "\"Ada yang punya rekomendasi pil penyubur buat cewek? Pacar gw yang polos ini makin hari badannya makin seksi pas gw 'ajarin' service malem-malem. Pengen cepet-cepet kebablasan biar sah gw kurung di rumah terus 🙏🏻🙂.\" <i>Anyone have any recommendations for fertility pills for girls? This innocent girlfriend of mine is getting sexier day by day as I 'teach' her how to give nighttime service. I want her to 'accidentally' get pregnant soon so she's legally mine to keep locked up at home 🙏🏻🙂</i>",
+                    reacts: [{emoji: emotes.eyes, count: 9}, {emoji: "😂", count: 6}]});
             }
             if (showV) {
-                chatDB.looking.push({ id: 'ved', text: "packing good 6.7\" shit around 11 PM tonight. Gas langsung dm. No vanilla shit. <i>packing good 6.7\" shit around 11 PM tonight. Just slide into DMs. No vanilla shit.</i>", reacts: [{emoji: emotes.eyes, count: 3}] });
+                chatDB.looking.push({id: 'ved', text: "packing good 6.7\" shit around 11 PM tonight. Gas langsung dm. No vanilla shit. <i>packing good 6.7\" shit around 11 PM tonight. Just slide into DMs. No vanilla shit.</i>",
+                    reacts: [{emoji: "😳", count: 9}, {emoji: emotes.eyes, count: 5}, {emoji: "🤤", count: 4}]});
             }
             if (showK) {
-                chatDB.looking.push({ id: 'dicka', text: "looking for cocksuckers who wanna explore dickology w/ me. (preferable older, no vanilla)", reacts: [{emoji: emotes.eyes, count: 1}] });
+                chatDB.looking.push({id: 'dicka', text: "looking for cocksuckers who wanna explore dickology w/ me. (preferable older, no vanilla)",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.water, count: 8}]});
             }
             if (showB) {
-                chatDB.looking.push({ id: 'bee', text: "Lagi pengen. Ada yang free? Face verify dulu. No ugly. <i>Feeling needy. Anyone free? Face verify first. No ugly.</i>", reacts: [{emoji: emotes.eyes, count: 2}] });
+                chatDB.looking.push({id: 'bee', text: "Lagi pengen. Ada yang free? Face verify dulu. No ugly. <i>Feeling needy. Anyone free? Face verify first. No ugly.</i>",
+                    reacts: [{emoji: emotes.eyes, count: 7}, {emoji: "🤤", count: 5}]});
             }
             if (showA) {
-                chatDB.looking.push({ id: 'ava', text: "bored. someone who can handle being wrecked tonight?", reacts: [{emoji: "🖤", count: 1}] });
+                chatDB.looking.push({id: 'ava', text: "bored. someone who can handle being wrecked tonight?",
+                    reacts: [{emoji: "😳", count: 10}, {emoji: emotes.eyes, count: 10}, {emoji: "🤤", count: 4}]});
             }
             if (showI) {
-                chatDB.looking.push({ id: 'anita', text: "looking for a canvas. contract ready. heels already on.", reacts: [{emoji: "🖤", count: 2}] });
+                chatDB.looking.push({id: 'anita', text: "looking for a canvas. contract ready. heels already on.",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: "😈", count: 5}]});
             }
 
             // ========== #media ==========
             if (showN) {
-                chatDB.media.push({ id: 'nathan', text: `t'night<br><div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/61e83bcf1d41478fa8754a2e701c8a92.jpg"><span class="spoiler-label">SPOILER</span></div>` });
+                chatDB.media.push({id: 'nathan', text: `t'night<br><div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/61e83bcf1d41478fa8754a2e701c8a92.jpg"><span class="spoiler-label">SPOILER</span></div>`,
+                    reacts: [{emoji: "😂", count: 10}, {emoji: emotes.eyes, count: 4}]});
             }
             if (showD) {
-                chatDB.media.push({ id: 'dosen', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/1789343184550.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Turns out teaching philosophy by day and breaking her in by night is the best kind of workout. Anyone else's little angel turning into a wildcat in bed lately?` });
+                chatDB.media.push({id: 'dosen', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/1789343184550.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Turns out teaching philosophy by day and breaking her in by night is the best kind of workout. Anyone else's little angel turning into a wildcat in bed lately?`,
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: "🥵", count: 4}]});
             }
             if (showB) {
-                chatDB.media.push({ id: 'bee', text: `Hand-drawn eyeliner tattoo. Should I make it permanent?<br><img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260915_205830.png" style="max-width:280px;border-radius:8px;margin-top:6px;">` });
+                chatDB.media.push({id: 'bee', text: `Hand-drawn eyeliner tattoo. Should I make it permanent?<br><img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260915_205830.png" style="max-width:280px;border-radius:8px;margin-top:6px;">`,
+                    reacts: [{emoji: emotes.fire, count: 7}, {emoji: emotes.eyes, count: 5}, {emoji: "🥵", count: 4}]});
+            }
+
+            // ========== NEW CHARACTERS CHATS ==========
+            // WLW girls
+            if (showVelvet) {
+                chatDB.general.push({id: 'velvet', text: "btw malam ini sepaket parfum baru akhirnya nyampe... ada yang punya rekomendasi aroma floral yang nggak terlalu manis buat kamar? <i>a new perfume set finally arrived tonight... anyone got recommendations for a floral scent that isn't too sweet for a room?</i>",
+                    reacts: [{emoji: "🍼", count: 9}, {emoji: "🤍", count: 7}, {emoji: "💕", count: 7}]});
+                chatDB.kink.push({id: 'velvet', text: "jujur aja, sengaja nyelinap pas dia lagi kuliah... kaus bekas pakainya masih hangat, baunya acak-acakan tapi bikin nagih plus bikin makin basah. <i>intentionally snuck in while she was at lectures... her worn t-shirt was still warm, the scent was a messy blend but completely addicting, and it got me so wet.</i>",
+                    reacts: [{emoji: "💕", count: 9}, {emoji: "🤍", count: 9}, {emoji: "🍼", count: 5}]});
+            }
+            if (showSanct) {
+                chatDB.general.push({id: 'sanctuary', text: "anyway habis shift panjang langsung pulang buat meluk istri... she was already waiting for her turn to nurse 🤍 <i>after a long shift I went straight home to hold my wife... she was already waiting for her turn to nurse 🤍</i>",
+                    reacts: [{emoji: "🍼", count: 6}, {emoji: "🤍", count: 5}]});
+                chatDB.kink.push({id: 'sanctuary', text: "update kecil, latching-nya makin hari makin pinter... betah jam-jaman cuma buat denger suara sedotan kecilnya pas nenen 🍼 <i>her latching gets better every day... I could stay like this for hours just listening to her soft little swallowing sounds while nursing 🍼</i>",
+                    reacts: [{emoji: "💕", count: 7}, {emoji: "🍼", count: 4}]});
+                chatDB.media.push({id: 'sanctuary', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/WA_1790002422822.jpg" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>stolen moments di sela-sela seminar... ditarik ke sudut sepi cuma karena dia tiba-tiba rewel pengen nenen 🤍 <i>stolen moments in between seminars... pulled into a quiet corner just because she suddenly got needy and wanted to nurse 🤍</i>`,
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: "🥵", count: 9}]});
+            }
+            if (showNenen) {
+                chatDB.general.push({id: 'nenenholic', text: "pagi semuanya~ Selamat pagi kakak-kakak semua 😋 Baru saja selesai kelas arsitektur... Capek banget tapi tadi sempat dikasi senyum tipis sama dosenku pas kumpul tugas 😭 Langsung auto semangat lagi 🤤❤️ <i>Good morning everyone 😋 Just finished my architecture class... Super exhausted, but my prof gave me a subtle smile when I submitted my assignment 😭 Instantly energized again 🤤❤️</i>",
+                    reacts: [{emoji: "👋🏽", count: 10}, {emoji: "✨", count: 5}]});
+                chatDB.kink.push({id: 'nenenholic', text: "GUYS DENGAR— YA TUHAN GUYS TADI PAS BIMBINGAN NENEN DOSENKU KETAT BANGET DI BALIK KEMEJA PUTIHNYA 😭😭 BENTUKNYA MONTOK PENUH BIKIN SALTING PARAH!! Rasanya aku pengen langsung nyeruduk dan nenen sampai puas di ruangan dia 😋🤤 <i>OH MY GOD GUYS DURING MY TUTORIAL SESSION MY PROF'S BOOBS WERE LOOKING SO TIGHT UNDER HER WHITE SHIRT 😭😭 THEY LOOK SO FULL AND PLUMP!! I honestly just wanted to pounce right there and suck her dry in her office 😋🤤</i>",
+                    reacts: [{emoji: "🤍", count: 8}, {emoji: "🍼", count: 4}, {emoji: "💕", count: 4}]});
+            }
+            if (showMay) {
+                chatDB.general.push({id: 'mamimay', text: "oh iya pagi ini jamunya gue kasih special secret ingredient 🤭✨ love potion dikit lah~ <i>This morning I added a special secret ingredient to her jamu 🤭✨ Just a little love potion</i>",
+                    reacts: [{emoji: "🫶", count: 9}, {emoji: "👋🏽", count: 8}]});
+                chatDB.kink.push({id: 'mamimay', text: "ok weird thought, no but like… why am i lowkey wanting her to get me pregnant 💦. Terus gue baru inget we're literally both woman. Bomat, tetep mau, hamilin aku plis kak. <i>No but like… why am I lowkey wanting her to get me pregnant 💦 Then I remembered we're literally both woman. Don't care, please get me pregnant ma'am</i>",
+                    reacts: [{emoji: emotes.eyes, count: 7}, {emoji: "😂", count: 4}, {emoji: emotes.fire, count: 4}]});
+                chatDB.media.push({id: 'mamimay', text: `<div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260922_111608.png"><span class="spoiler-label">SPOILER</span></div><br>Bumbu rahasia~ <i>Secret recipes~</i>`,
+                    reacts: [{emoji: "😂", count: 7}, {emoji: emotes.eyes, count: 5}, {emoji: emotes.fire, count: 4}]});
+            }
+            if (showPuspa) {
+                chatDB.looking.push({id: 'puspa', text: "Free malam ini sampai besok. PC saya kalau tertarik. <i>I’m free tonight. DM me if interested.</i>",
+                    reacts: [{emoji: "😳", count: 8}, {emoji: emotes.eyes, count: 8}]});
+                chatDB.media.push({id: 'puspa', text: `<div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260927_182950.png"><span class="spoiler-label">SPOILER</span></div><br>Kemarin malam. <i>Last night.</i>`,
+                    reacts: [{emoji: "😂", count: 8}, {emoji: emotes.fire, count: 7}, {emoji: emotes.eyes, count: 6}]});
+                chatDB.media.push({id: 'puspa', text: `<div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260927_183012.png"><span class="spoiler-label">SPOILER</span></div><br>Persiapan untuk malam ini. <i>Preparation for tonight.</i>`,
+                    reacts: [{emoji: emotes.eyes, count: 6}, {emoji: emotes.fire, count: 5}, {emoji: "😂", count: 4}]});
+            }
+            // natural WLW cross-replies
+            if (showVelvet && showSanct) {
+                chatDB.general.push({id: 'sanctuary',
+                    replyTo: { name: "Velvet Mist", snippet: "malam ini sepaket parfum baru..." },
+                    text: "coba yang rose + sandalwood. istri gue suka. nggak manis berlebihan 🤍 <i>try rose + sandalwood. my wife likes it. not overly sweet 🤍</i>",
+                    reacts: [{emoji: "❤️", count: 10}, {emoji: "🥰", count: 7}, {emoji: "💕", count: 7}]});
+            }
+            if (showNenen && showSanct) {
+                chatDB.kink.push({id: 'nenenholic',
+                    replyTo: { name: "nenen gratis khusus istri 🤱🏻", snippet: "latching-nya makin hari makin pinter..." },
+                    text: "kak tolong ajarin tekniknya plisss 😭😭 gue iri banget <i>kak please teach me the technique 😭😭 i'm so jealous</i>",
+                    reacts: [{emoji: "😂", count: 6}, {emoji: emotes.eyes, count: 5}]});
+            }
+            if (showMay && showVelvet) {
+                chatDB.kink.push({id: 'mamimay',
+                    replyTo: { name: "Velvet Mist", snippet: "sengaja nyelinap pas dia lagi kuliah..." },
+                    text: "girl same energy. bedanya gue pakai jamu biar dia makin nurut 🤭 <i>girl same energy. difference is i use jamu so she gets more obedient 🤭</i>",
+                    reacts: [{emoji: "😂", count: 6}, {emoji: emotes.fire, count: 5}, {emoji: emotes.eyes, count: 4}]});
+            }
+
+            // Any-gender / hetero males
+            if (showOm) {
+                chatDB.general.push({id: 'ombengkel', text: "cerita dulu— Tadi malem ada yang minta “ampe tumpah keluar” nih. Lain kali mah bilang napa dari awal, biar om tahan lebih lamaan dikit. <i>Last night someone asked for it 'until it spills out.' Next time just say so from the start so uncle can last a bit longer.</i>",
+                    reacts: [{emoji: "😂", count: 7}, {emoji: emotes.fire, count: 5}]});
+                chatDB.looking.push({id: 'ombengkel', text: "Lagi nyari yang kuat ampe dalem ama betah nahan di dalem. Paling demen yang bisa maen banyak ronde. Polos kagak pake karet. Buat yang seriusan aja nih. <i>Looking for someone who can take it deep and keep it in. Multiple rounds preferred. No protection. Serious only.</i>",
+                    reacts: [{emoji: emotes.eyes, count: 8}, {emoji: "😳", count: 8}, {emoji: "🤤", count: 7}]});
+                chatDB.media.push({id: 'ombengkel', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/17899109549371.jpg" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Selesainya kesorean. Masih anget-anget <i>Finished late. Still warm.</i>`,
+                    reacts: [{emoji: "🥵", count: 9}, {emoji: emotes.eyes, count: 8}, {emoji: emotes.fire, count: 6}]});
+            }
+            if (showOnii) {
+                chatDB.general.push({id: 'oniigalih', text: "dengerin ya— Aing mah udah dibilang berkali-kali ya, sia pada budek apa gimana sih?! Kalau mau posting di #looking-for tuh pake otak, kasih tahu umur sama status hubungan! <i>I've already told you guys so many times, are you deaf or what?! If you want to post in #looking-for, use your brain, give age and relationship status!</i>",
+                    reacts: [{emoji: "🤍", count: 7}, {emoji: "🍼", count: 5}]});
+                chatDB.looking.push({id: 'oniigalih', text: "Bukan looking ya anjir, jangan geer! Ini mah urang cuma mau ngingetin doang. Mun kalian udah dapet partner dari server ini, minimal laporan atuh di #breeding-log. <i>Not looking damn it! This is just me reminding you. If you already got a partner from this server, at least report it in #breeding-log.</i>",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.water, count: 6}, {emoji: "😩", count: 5}]});
+                chatDB.media.push({id: 'oniigalih', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/179025704359811.jpg" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Gak usah nyariin, gak sudi! Ini mah cuma bukti doang kalau mod-nya belum mati. <i>No need to look for me, I'm not willing! This is just proof that the mod isn't dead yet.</i>`,
+                    reacts: [{emoji: emotes.eyes, count: 9}, {emoji: emotes.fire, count: 6}]});
+            }
+            if (showBmoist) {
+                chatDB.general.push({id: 'bmoist', text: "random aja, duh tagihan listrik dan aer bulan ini gede, anjeng. Salah gw sih, keseringan colayyy 🥴 <i>Fuck, my electric and water bills are high this month. My fault, jerked off too many times 🥴</i>",
+                    reacts: [{emoji: "🥰", count: 10}, {emoji: "💕", count: 7}]});
+                chatDB.kink.push({id: 'bmoist', text: "confession time, there's this regular that keeps complaining about losing their underwear... I can't help it, they smell soooo good. Fuck. I wanna smell from the source 🤤",
+                    reacts: [{emoji: emotes.eyes, count: 10}, {emoji: "😂", count: 9}]});
+                chatDB.media.push({id: 'bmoist', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260921_190333.jpg" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Hasil buruan hari ini. Pasti mereka lagi horny pas make ini, soalnya baunya enak banget. 🤤 <i>Today's haul. Bet they were horny when they used this, cus it smells heavenly 🤤</i>`,
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: emotes.eyes, count: 9}, {emoji: "🥵", count: 6}]});
+            }
+            if (showOm && showOnii) {
+                chatDB.general.push({id: 'ombengkel',
+                    replyTo: { name: "OniiGalih", snippet: "Aing mah udah dibilang berkali-kali..." },
+                    text: "santai om, orang di sini emang susah diatur. yang penting stok karet gue abis terus 😌 <i>relax om, people here are hard to manage. what matters is my rubber stock keeps running out 😌</i>",
+                    reacts: [{emoji: "😂", count: 9}, {emoji: emotes.eyes, count: 5}]});
+            }
+            if (showRawr) {
+                chatDB.general.push({id: 'rawrka', text: "uhh Halo para pembayar pajak 👋 <i>Hello tax payers 👋</i>",
+                    reacts: [{emoji: "✨", count: 8}, {emoji: "🫶", count: 8}]});
+                chatDB.kink.push({id: 'rawrka', text: "wait ... Is this even legal? do you reckon that God stays in heaven because of freaks like yall?",
+                    reacts: [{emoji: "😂", count: 7}, {emoji: emotes.fire, count: 5}]});
+                if (showBmoist) {
+                    chatDB.media.push({id: 'rawrka',
+                        replyTo: { name: "B-Moist", snippet: "Hasil buruan hari ini. Pasti mereka lagi horny..." },
+                        text: "you know what you need? Help. 😭",
+                    reacts: [{emoji: emotes.fire, count: 4}, {emoji: emotes.eyes, count: 4}]});
+                }
+            }
+            if (showLubang) {
+                chatDB.general.push({id: 'lubang', text: "keluh kesah dulu, orang rumah udah ngomel-ngomel krna masih blom lulus, customer cancel mulu gara-gara hujan. ini kagak ada apa yak tante-tante yg mau mungut gue 🙄 <i>My family’s already been nagging me for still not graduating, customers keep cancelling because of the rain. Like, are there seriously no older women out there willing to take me in?</i>",
+                    reacts: [{emoji: "🍼", count: 10}, {emoji: "🤍", count: 9}, {emoji: "💕", count: 5}]});
+                chatDB.kink.push({id: 'lubang', text: "cerita seblak, mbak-mbak yang pesen seblak tadi kayanya sengaja mancing gue ya 🤨 sengaja banget pake tanktop doang, mana pentilnya njeplak banget lagi, langsung ngaceng gue anjir. <i>I think that girl who ordered seblak earlier was deliberately seducing me 🤨 She was obviously wearing nothing but a tank top, and her nipples were showing so damn much. Got me hard immediately.</i>",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: emotes.eyes, count: 5}]});
+                chatDB.looking.push({id: 'lubang', text: "Need an older woman with nice tits, any size is okay but if it's too big or AI-generated i'll block you.",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: emotes.eyes, count: 5}, {emoji: "😂", count: 5}]});
+                chatDB.media.push({id: 'lubang', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/generated-image.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>JIKA 19 JUTA ORANG DOYAN NENEN, MAKA SALAH SATUNYA ADALAH GUE! <i>If 19 million people are into sucking tits, then one of them is ME!</i>`,
+                    reacts: [{emoji: "🥵", count: 8}, {emoji: emotes.eyes, count: 7}, {emoji: emotes.fire, count: 6}]});
+            }
+            if (showArang) {
+                chatDB.general.push({id: 'arang', text: "gas aja cerita, anjrit, kalah ml gara-gara satu tim pada goblok 😭 gue udah bilang jangan maju sendiri malah ngeyel semua <i>Fuck, lost the ML match because my whole team is fucking stupid 😭</i>",
+                    reacts: [{emoji: "😂", count: 6}, {emoji: "💀", count: 5}, {emoji: "😭", count: 4}]});
+                chatDB.kink.push({id: 'arang', text: "real talk, gue tuh paling lemah kalo udah soal mulutnya dia. jangan tanya kenapa, emang dari dulu susah fokus kalo dia lagi ngomong deket gue. <i>I’m so weak when it comes to her mouth. Don’t ask why, I’ve just always had trouble focusing whenever she’s talking close to me.</i>",
+                    reacts: [{emoji: "😂", count: 10}, {emoji: emotes.eyes, count: 7}]});
+                chatDB.looking.push({id: 'arang', text: "Cung yang mau nongki, angkringan gue masih buka. kalo ada yang mau makan sabi. tapi jangan ngajak gue ke mana-mana, gue lagi nunggu adek manis gue mampir wkwk <i>Anyone wanna hang out? My angkringan’s still open. But don’t ask me to go anywhere, I’m waiting for my girl to drop by lol.</i>",
+                    reacts: [{emoji: "💕", count: 10}, {emoji: "🍼", count: 10}, {emoji: "🤍", count: 4}]});
+                chatDB.media.push({id: 'arang', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/1790343020564.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Dah buka ya geys ya, tempat biasa. <i>Already open, anyone wanna come I'm at the usual place.</i>`,
+                    reacts: [{emoji: emotes.eyes, count: 8}, {emoji: emotes.fire, count: 5}]});
+            }
+            if (showArka) {
+                chatDB.general.push({id: 'arka', text: "work rant incoming— Anjingg lahhh, i can't even catch a break for a single day, huh? my employee almost made my fucking business doomed. before u ask, yes i fired that fucker.",
+                    reacts: [{emoji: "😤", count: 7}, {emoji: "☕", count: 7}]});
+                chatDB.kink.push({id: 'arka', text: "hot take— Those who struggle and play hard to get are the ones who cry prettier when they're overstimulated and defeated, yk? i love seeing those pretty faces soaked in tears and drool.",
+                    reacts: [{emoji: "💕", count: 10}, {emoji: "❤️", count: 8}]});
+                chatDB.looking.push({id: 'arka', text: "discord e-kitten -- lol, joking. Though brats who need correcting are yummy. min. 21+. don't small talk me. either be interesting or don't waste both our time.",
+                    reacts: [{emoji: "😂", count: 7}, {emoji: emotes.eyes, count: 6}, {emoji: emotes.fire, count: 6}]});
+                chatDB.media.push({id: 'arka', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-09-26-16-59-43-artist_Sh-2299151392.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Just done showering.`,
+                    reacts: [{emoji: "🥵", count: 8}, {emoji: emotes.fire, count: 4}]});
+            }
+            // group-style cross-talk in general/kink when multiple present
+            if (showLubang && showArang) {
+                chatDB.general.push({id: 'arang', replyTo: { name: "r.lubang.bisul", snippet: "orang rumah udah ngomel-ngomel..." }, text: "anjir nasib lo parah. mampir ke angkringan gue nanti, makan gratis. <i>damn your luck is rough. drop by my angkringan later, free food.</i>",
+                    reacts: [{emoji: "🍼", count: 4}, {emoji: "🤍", count: 4}]});
+            }
+            if (showArka && showArang) {
+                chatDB.general.push({id: 'arka', replyTo: { name: "arang", snippet: "anjrit, kalah ml gara-gara satu tim..." }, text: "skill issue. hire better teammates. or just fire them like I do.",
+                    reacts: [{emoji: "😤", count: 5}, {emoji: "💼", count: 5}, {emoji: "☕", count: 4}]});
+            }
+            if (showLubang && showGama) {
+                chatDB.kink.push({id: 'lubang', replyTo: { name: "Gama", snippet: "repot amat tiap hari kudu gua peres..." }, text: "anjir tetangga lo full service ya. iri gue. <i>damn your neighbor is full service. i'm jealous.</i>",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: "😂", count: 5}]});
+            }
+            if (showArka && showVoid) {
+                chatDB.kink.push({id: 'arka', replyTo: { name: "Void_31", snippet: "Barusan ketemu sm cwe yg bener-bener idaman..." }, text: "don't wait too long. the shy ones cry the prettiest when you finally break them.",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: emotes.eyes, count: 8}, {emoji: "😂", count: 4}]});
+            }
+            if (showSubi && showArka) {
+                chatDB.kink.push({id: 'subiantok', replyTo: { name: "CEO of sawit", snippet: "Those who struggle and play hard to get..." }, text: "facts. that defeated look after they stop fighting hits different.",
+                    reacts: [{emoji: emotes.eyes, count: 10}, {emoji: emotes.fire, count: 10}, {emoji: "😂", count: 5}]});
+            }
+            if (showOm && showLubang) {
+                chatDB.general.push({id: 'ombengkel', replyTo: { name: "r.lubang.bisul", snippet: "ini kagak ada apa yak tante-tante..." }, text: "dateng ke bengkel om. yang minta 'ampe tumpah' kemaren juga tipe gitu. <i>come to uncle's workshop. the one who asked 'until it spills' yesterday was that type too.</i>",
+                    reacts: [{emoji: emotes.eyes, count: 9}, {emoji: "😂", count: 6}, {emoji: emotes.fire, count: 4}]});
+            }
+            if (showVoid) {
+                chatDB.general.push({id: 'void31', text: "same energy, Stress dibikin kerjaan yang makin numpuk. Mana bini gw udah ngomel pas gw balik malem kmrn—mungkin nyium bau parfum cewe lain di kemeja gw. But who tf cares? <i>Stressed from overloaded work. Plus my wife gave me shit when I got home late—probably smelled another woman's perfume on my shirt. But who tf cares?</i>",
+                    reacts: [{emoji: "💼", count: 9}, {emoji: "😤", count: 5}, {emoji: "☕", count: 5}]});
+                chatDB.kink.push({id: 'void31', text: "update, Barusan ketemu sm cwe yg bener-bener idaman gw. Cakep, body goals, mana malu-malu banget lg sm gua. Sepanjang date ngaceng terus kontol gw, tp harus sabar dlu. <i>Just met my absolute dream girl. Gorgeous, body goals, even acting all shy. Spent the whole date rock hard, but I gotta play it smart.</i>",
+                    reacts: [{emoji: emotes.water, count: 9}, {emoji: emotes.fire, count: 8}]});
+            }
+            if (showSubi) {
+                chatDB.general.push({id: 'subiantok', text: "real talk, boring as hell in the office right now. go check the media channel, let's do some ratings.",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: "🥵", count: 8}]});
+                chatDB.kink.push({id: 'subiantok', text: "not gonna lie, fuck, that mouth makes me want to shove my cock all the way in just to shut them up. their mouth already looks so damn delicious, can't even imagine how tight and wet it is down there.",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: "😩", count: 6}, {emoji: emotes.water, count: 6}]});
+                chatDB.looking.push({id: 'subiantok', text: "active tonight. send your best submissions for rating in DMs.",
+                    reacts: [{emoji: "🤤", count: 10}, {emoji: emotes.eyes, count: 5}, {emoji: "😳", count: 4}]});
+                chatDB.media.push({id: 'subiantok', text: `<div style="display:flex;flex-direction:column;gap:8px;">
+                    <div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/08291a81-c3e2-4ea3-b642-45ad2b356d59.jpg"><span class="spoiler-label">SPOILER</span></div>
+                    <div class="spoiler-box" onclick="this.classList.toggle('revealed')"><img src="https://file.garden/aGgA7xAxFEwFoSQZ/8f909110-e1e2-4bca-a37a-848e394f430c.png"><span class="spoiler-label">SPOILER</span></div>
+                </div><br>dm if interested~`,
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: "😂", count: 9}, {emoji: emotes.eyes, count: 8}]});
+            }
+            if (showGama) {
+                chatDB.general.push({id: 'gama', text: "wait this is wild— tetangga sebelah kamar gua di Kost Vossa yang biasanya rewel masalah jemuran, tiba-tiba tadi sore ngetok pintu kamar gua sambil nahan tangis. ternyata dia punya penyakit langka yang bisa bikin dadanya ngeluarin ASI padahal kaga hamil. <i>My next-door neighbor at Kost Vossa who usually complains about the clothesline suddenly knocked on my door holding back tears. Turns out she has a rare condition that makes her breasts produce milk even though she's not pregnant.</i>",
+                    reacts: [{emoji: "💕", count: 9}, {emoji: "🍼", count: 7}, {emoji: "🤍", count: 7}]});
+                chatDB.kink.push({id: 'gama', text: "lanjutan cerita, repot amat tiap hari kudu gua peres pake tangan atau mulut gua. enak sekalian gua bikin dia hamil biar ada anak yang bantu ngabisin susunya. <i>It's a hassle emptying her every day with my hands or my mouth. Better to just knock her up so there's a baby to help drain all her milk.</i>",
+                    reacts: [{emoji: "💕", count: 6}, {emoji: "🤍", count: 4}]});
+                chatDB.looking.push({id: 'gama', text: "ada rekomendasi alat peres elektrik yang awet ga? punya dia jebol, males gua kalo tiap jam kudu nyedot manual pake mulut gua sendiri. <i>Any recommendations for a durable electric breast pump? Hers broke down, and I'm tired of having to manually suck her dry with my own mouth every hour.</i>",
+                    reacts: [{emoji: "🤍", count: 7}, {emoji: "🍼", count: 6}, {emoji: "💕", count: 6}]});
+                chatDB.media.push({id: 'gama', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/file_00000000460881fa92f86db364f848f5.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>udah rapi mau berangkat kerja malah ditahan gara-gara susunya bengkak minta dikosongin. rambut gua sampe berantakan diremes dia tiap gua sedot putingnya kenceng-kenceng. <i>Already dressed up and about to leave for work, but she held me back because her breasts were swollen and needed emptying. My hair got all messed up from her gripping it every time I sucked her nipples hard.</i>`,
+                    reacts: [{emoji: "🥵", count: 8}, {emoji: emotes.fire, count: 6}, {emoji: emotes.eyes, count: 5}]});
+            }
+            if (showRen) {
+                chatDB.general.push({id: 'renjana', text: "sekadar mengingatkan, tidak semua sesak di malam jumat kliwon itu masalah medis. kalau ada yang dadanya berat dan kepalanya berputar tiap tengah malam, bisa jadi aura tubuhnya terlalu wangi untuk makhluk gaib. <i>not all chest tightness on friday kliwon night is a medical issue. if someone feels heavy in the chest and dizzy every midnight, their body's aura might just be too sweet for spirits.</i>",
+                    reacts: [{emoji: "😂", count: 8}, {emoji: emotes.eyes, count: 5}]});
+                chatDB.kink.push({id: 'renjana', text: "catatan, menyegel tulang wangi tidak bisa pakai mantra biasa. cara paling bersih ya ditanam benih spiritual secara rutin sampai wadahnya terisi penuh. <i>sealing a 'sweet-bone soul' cannot be done with ordinary chants. the cleanest way is planting spiritual seed regularly until the vessel is completely filled.</i>",
+                    reacts: [{emoji: "😩", count: 9}, {emoji: emotes.water, count: 4}]});
+            }
+            if (showHelios) {
+                chatDB.general.push({id: 'helios', text: "spill dulu, wkwk gatel bgt ini meetingnya ngaret jirr. i just wanna go home maann this script isn’t gonna record itself <i>lmao i’m frustrated this meeting’s going overtime</i>",
+                    reacts: [{emoji: "😤", count: 8}, {emoji: "💼", count: 4}]});
+                chatDB.kink.push({id: 'helios', text: "idea dump, thinking of recording something with a choking-focus in it, wdyt?",
+                    reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.eyes, count: 9}, {emoji: "😂", count: 7}]});
+                chatDB.looking.push({id: 'helios', text: "butuh inspirasi malem ini. looking for a pretty woman yg mau diajak vcs sampe cum. i’ll take care of you, dw <i>looking for inspiration tonight. looking for a pretty woman who’s down to do video call sex until we cum.</i>",
+                    reacts: [{emoji: "🤍", count: 7}, {emoji: "💕", count: 6}, {emoji: "🍼", count: 6}]});
+            }
+            if (showRagi) {
+                chatDB.general.push({id: 'maharaja', text: "tolongin dong, Jancok, duit gw udah tinggal dikit njink, temen gw dah gk sudi gua tinggal ditempatnya. Pls, siapapun sewa gw biar gw punya duit. <i>Fuck, my wallet is getting dry damn it. Please, anyone hire me so I can get few bucks.</i>",
+                    reacts: [{emoji: "😂", count: 9}, {emoji: emotes.eyes, count: 8}]});
+                chatDB.kink.push({id: 'maharaja', text: "honestly, Baru selesai entot brutal, gila peju gua kemana-mana njir- gw mau bersihin juga dianya masih tidur, mana gw ngaceng lagi tolong. <i>Just finish a hard fuck, wild how my cum is everywhere goddamn- I wanted to clean up but they're still sleeping, and I just got hard again.</i>",
+                    reacts: [{emoji: "🍼", count: 9}, {emoji: "💕", count: 6}, {emoji: "🤍", count: 6}]});
+            }
+
+            // MLM
+            if (showWira) {
+                chatDB.general.push({id: 'pakwira', text: "quick promo— If you need a boarding house, DM me. There's a few more rooms left.",
+                    reacts: [{emoji: emotes.eyes, count: 7}, {emoji: "🤤", count: 5}]});
+                chatDB.kink.push({id: 'pakwira', text: "for the record, There's a big difference between just nutting inside and actually breeding. When you're doing it properly you feel the difference in how deep you go, how long you stay locked in, how much pressure you put on his prostate.",
+                    reacts: [{emoji: emotes.water, count: 9}, {emoji: emotes.fire, count: 9}, {emoji: "😩", count: 7}]});
+                chatDB.looking.push({id: 'pakwira', text: "Someone don't mind an old man with equally old sons. They're twins. So, twice as annoying. Cute though.",
+                    reacts: [{emoji: emotes.eyes, count: 9}, {emoji: "😂", count: 7}]});
+                chatDB.media.push({id: 'pakwira', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/TA-2026-09-25-10-20-56-Half_body-32750146269729.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Rendra told me to take a selfie this morning.`,
+                    reacts: [{emoji: "🥵", count: 7}, {emoji: emotes.fire, count: 6}, {emoji: emotes.eyes, count: 5}]});
+            }
+            if (showHindia) {
+                chatDB.general.push({id: 'hindia', text: "cek aja, udh pada makan blom? jangan sampe lupa makan ya gengs 🙂 <i>y'all eaten yet? don't forget to eat, guys :)</i>",
+                    reacts: [{emoji: emotes.fire, count: 8}, {emoji: "😂", count: 5}, {emoji: emotes.eyes, count: 4}]});
+                chatDB.kink.push({id: 'hindia', text: "bayangin, perutnya buncit banget abis makan… bayangin kalo gua isi peju tumpah-tumpah sampe beneran bunting 🤤 <i>his belly’s so fucking round after he finished eating… imagine if i filled it full of cum till it spilled out… imagine if i actually got him preggo 🤤</i>",
+                    reacts: [{emoji: "😩", count: 10}, {emoji: emotes.fire, count: 9}]});
+            }
+            if (showSal) {
+                chatDB.general.push({id: 'sal', text: "btw Tadi pas gua dikampus ada maba yang natap ke gua lama banget, kayaknya dia ngeh deh gua itu siapa. <i>When I was at campus, there was a freshmen that was looking at me for a bit too long. I think he clocked who I am.</i>",
+                    reacts: [{emoji: emotes.eyes, count: 10}, {emoji: "🤤", count: 5}, {emoji: "😳", count: 4}]});
+                chatDB.kink.push({id: 'sal', text: "spill, Gila, gua di ajak test kink baru sama fuck-partner gua dan anjingg, kontol gua langsung ngaceng. <i>Wild, I was invited to test out a new kink with my fuck-buddy and goddamn, my cock got hard in an instant.</i>",
+                    reacts: [{emoji: "😂", count: 8}, {emoji: "💀", count: 5}]});
+                chatDB.looking.push({id: 'sal', text: "Ada yang free gk malem ini sekitar jam 12-3? Gue mau recording cuma kayaknya enak kalo buat cucking audio. <i>Is anyone free tonight around 12AM-3AM? I want to record and I feel like cucking audio would do well.</i>",
+                    reacts: [{emoji: emotes.fire, count: 10}, {emoji: "😩", count: 7}, {emoji: emotes.water, count: 7}]});
+                chatDB.media.push({id: 'sal', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/0c003d35-228c-43a4-b9f8-17298b7a061d.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Baru rapih mandi dan abang sange lagi, ada yang mau join gk? <i>Just got out of the shower and I'm horny again, anyone wanna join?</i>`,
+                    reacts: [{emoji: "🥵", count: 8}, {emoji: emotes.eyes, count: 7}]});
             }
         }
 
@@ -1056,20 +1589,58 @@
                 return true;
             });
 
-            document.getElementById('member-count-mobile').innerText = `• ${filtered.length + 1} Members`;
+            const totalMembers = Object.keys(characters).length + 1; // all chars + user
+            const onlineCount = filtered.length + 1; // filtered chars + user
+            document.getElementById('member-count-mobile').innerText = `• ${totalMembers} Members`;
+            // update server-info modal badges if present
+            const onlineBadge = document.querySelector('.server-badge-online') || document.querySelectorAll('.server-badge')[1];
+            const membersBadge = document.querySelector('.server-badge-members') || document.querySelectorAll('.server-badge')[2];
+            if (onlineBadge) onlineBadge.innerHTML = `● ${onlineCount} Online`;
+            if (membersBadge) membersBadge.innerHTML = `${totalMembers} Members`;
 
-            let html = `<div class="member-category">Online — ${filtered.length}</div>`;
+            // group by crude/funny POV labels
+            function povKey(c) {
+                if (c.gender === 'Female' && c.targetUser === 'Female') return 'wlw';
+                if (c.gender === 'Female' && c.targetUser === 'Male') return 'f4m';
+                if (c.gender === 'Female' && c.targetUser === 'Any') return 'fany';
+                if (c.gender === 'Male' && c.targetUser === 'Female') return 'm4f';
+                if (c.gender === 'Male' && c.targetUser === 'Male') return 'mlm';
+                if (c.gender === 'Male' && c.targetUser === 'Any') return 'many';
+                return 'other';
+            }
+            const povOrder = [
+                { key: 'wlw',  label: '🍑 girl juice only zone (WLW)' },
+                { key: 'm4f',  label: '💦 will put a baby in you (FEMPOV)' },
+                { key: 'many', label: '😋 a hole is a hole (ANYPOV)' },
+                { key: 'mlm',  label: '🍆 men breed men (MLM)' },
+                { key: 'f4m',  label: '💋 will drain you dry (MALEPOV)' },
+                { key: 'fany', label: '✨ as long as it cums (ANYPOV)' },
+                { key: 'other', label: 'Online' }
+            ];
+            const groups = {};
             filtered.forEach(c => {
-                let color = c.gender === 'Female' ? 'color:#e91e63;' : 'color:#3498db;';
-                html += `<div class="member-item" onclick="openProfile('${c.id}')">
-                    <div class="member-avatar-wrapper">
-                        <img src="${c.pfp}" class="member-avatar">
-                        <div class="member-status ${c.status}"></div>
-                    </div>
-                    <span class="member-name" style="${color}">${c.name}</span>
-                </div>`;
+                const k = povKey(c);
+                if (!groups[k]) groups[k] = [];
+                groups[k].push(c);
             });
-            html += `<div class="member-category">New — 1</div>
+
+            let html = '';
+            povOrder.forEach(sec => {
+                const list = groups[sec.key];
+                if (!list || !list.length) return;
+                html += `<div class="member-category">${sec.label} — ${list.length}</div>`;
+                list.forEach(c => {
+                    const nc = c.nameClass || (c.gender === 'Female' ? 'name-f-wlw' : 'name-m-fem');
+                    html += `<div class="member-item" onclick="openProfile('${c.id}')">
+                        <div class="member-avatar-wrapper">
+                            <img src="${c.pfp}" class="member-avatar">
+                            <div class="member-status ${c.status}"></div>
+                        </div>
+                        <span class="member-name ${nc}">${c.name}</span>
+                    </div>`;
+                });
+            });
+            html += `<div class="member-category">🆕 untouched (for now)</div>
                 <div class="member-item" onclick="openMyProfile()">
                     <div class="member-avatar-wrapper">
                         <img src="${userData.pfp}" class="member-avatar">
@@ -1113,13 +1684,21 @@
                     reacts += '</div>';
                 }
 
-                if (isFirst) {
+                const nc = char.nameClass || '';
+                let replyHtml = '';
+                if (msg.replyTo) {
+                    const rName = msg.replyTo.name || '';
+                    const rSnippet = msg.replyTo.snippet || '';
+                    replyHtml = `<div class="msg-reply"><span class="msg-reply-name">${rName}</span><span class="msg-reply-snippet">${rSnippet}</span></div>`;
+                }
+                if (isFirst || msg.replyTo) {
                     html += `<div class="message first">
                         <img src="${char.pfp}" class="msg-avatar" onclick="${click}">
                         <div class="msg-header">
-                            <span class="msg-username" style="color:${char.color}" onclick="${click}">${char.name}</span>
+                            <span class="msg-username ${nc}" onclick="${click}">${char.name}</span>
                             <span class="msg-timestamp">${timeStr}</span>
                         </div>
+                        ${replyHtml}
                         <div class="msg-text">${msg.text}</div>
                         ${reacts}
                     </div>`;
