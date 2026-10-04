@@ -120,44 +120,123 @@
             opacity: 0;
         }
 
-        /* === ONBOARDING === */
+        /* === ONBOARDING — VIP door + glass === */
         #onboarding-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
             display: flex; align-items: center; justify-content: center; z-index: 999999;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(233,30,99,0.28), transparent 55%),
+                radial-gradient(ellipse 60% 50% at 80% 100%, rgba(156,39,176,0.18), transparent 50%),
+                #0e0e12;
         }
         .onboarding-card {
-            background-color: var(--bg-primary); width: 90%; max-width: 440px; padding: 32px; border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center; display: none;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 92%; max-width: 420px; padding: 28px 28px 24px;
+            border-radius: 16px; text-align: center; display: none;
+            background: rgba(30, 31, 34, 0.82);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+            animation: cardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .onboarding-card.active { display: block; }
-        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .onboarding-card h2 { color: var(--header-primary); font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-        .onboarding-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.4;}
+        @keyframes cardIn {
+            from { transform: translateY(10px) scale(0.97); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .ob-brand {
+            display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;
+        }
+        .ob-brand img {
+            width: 56px; height: 56px; border-radius: 18px; object-fit: cover;
+            box-shadow: 0 0 0 2px rgba(233,30,99,0.45), 0 8px 24px rgba(233,30,99,0.25);
+        }
+        .ob-brand-name {
+            font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            color: #f2a4c0; opacity: 0.95;
+        }
+        .ob-progress {
+            display: flex; justify-content: center; gap: 8px; margin-bottom: 22px;
+        }
+        .ob-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); transition: all 0.25s ease;
+        }
+        .ob-dot.on {
+            background: var(--brand-experiment);
+            box-shadow: 0 0 0 3px rgba(233,30,99,0.25);
+            transform: scale(1.15);
+        }
+        .onboarding-card h2 {
+            color: var(--header-primary); font-size: 22px; font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 6px; line-height: 1.25;
+        }
+        .onboarding-card p {
+            color: var(--text-muted); font-size: 14px; margin-bottom: 22px;
+            line-height: 1.5; font-weight: 400;
+        }
         .btn-option {
-            background-color: var(--bg-secondary); color: var(--text-normal); padding: 14px; border-radius: 8px;
-            width: 100%; margin-bottom: 12px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.2s ease;
+            background: rgba(255,255,255,0.04); color: var(--text-normal);
+            padding: 14px 16px; border-radius: 12px; width: 100%; margin-bottom: 10px;
+            cursor: pointer; font-size: 15px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-option:hover { background-color: var(--bg-modifier-hover); }
-        .btn-option.selected { background-color: rgba(233, 30, 99, 0.15); box-shadow: 0 0 0 1px var(--brand-experiment); }
+        .btn-option .ob-ico { font-size: 18px; line-height: 1; opacity: 0.9; }
+        .btn-option:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .btn-option.selected {
+            background: rgba(233, 30, 99, 0.18);
+            border-color: rgba(233, 30, 99, 0.65);
+            box-shadow: 0 0 0 1px rgba(233,30,99,0.35), 0 4px 16px rgba(233,30,99,0.15);
+            color: #fff;
+            transform: scale(1.02);
+        }
         .input-text {
-            width: 100%; background: var(--bg-tertiary); border: none; color: var(--text-normal);
-            padding: 14px; border-radius: 8px; font-size: 16px; margin-bottom: 24px; outline: none;
+            width: 100%; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-normal); padding: 14px 16px; border-radius: 12px;
+            font-size: 16px; margin-bottom: 20px; outline: none; transition: box-shadow 0.15s, border-color 0.15s;
         }
-        .input-text:focus { box-shadow: 0 0 0 2px var(--brand-experiment); }
-        .pfp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .input-text::placeholder { color: #6d7278; }
+        .input-text:focus {
+            border-color: rgba(233,30,99,0.55);
+            box-shadow: 0 0 0 3px rgba(233,30,99,0.2);
+        }
+        .pfp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
         .pfp-option {
             width: 100%; aspect-ratio: 1/1; border-radius: 50%; cursor: pointer; object-fit: cover;
             border: 3px solid transparent; transition: all 0.2s; background: var(--bg-tertiary);
         }
-        .pfp-option.selected { border-color: var(--brand-experiment); transform: scale(1.05); }
-        .btn-continue {
-            background-color: var(--brand-experiment); color: white; border: none; padding: 14px; width: 100%;
-            border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+        .pfp-option:hover { transform: scale(1.04); border-color: rgba(255,255,255,0.15); }
+        .pfp-option.selected {
+            border-color: var(--brand-experiment);
+            transform: scale(1.06);
+            box-shadow: 0 0 0 3px rgba(233,30,99,0.3);
         }
-        .btn-continue:hover { background-color: var(--brand-experiment-hover); }
-        .btn-continue:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-continue {
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: white; border: none; padding: 14px; width: 100%;
+            border-radius: 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+            cursor: pointer; transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 18px rgba(233,30,99,0.35);
+        }
+        .btn-continue:hover:not(:disabled) {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(233,30,99,0.45);
+        }
+        .btn-continue:disabled {
+            opacity: 0.4; cursor: not-allowed; box-shadow: none; filter: none;
+        }
+        .btn-continue.ready-pulse {
+            animation: joinPulse 1.6s ease-in-out 1;
+        }
+        @keyframes joinPulse {
+            0%, 100% { box-shadow: 0 4px 18px rgba(233,30,99,0.35); }
+            50% { box-shadow: 0 4px 28px rgba(233,30,99,0.65); }
+        }
 
         /* === DISCORD APP LAYOUT === */
         #discord-app { display: none; width: 100%; height: 100%; flex-direction: row; position: relative;}
@@ -184,21 +263,29 @@
             box-shadow: 0 1px 0 rgba(0,0,0,0.2); flex-shrink: 0; letter-spacing: -0.01em;
         }
         .server-header:hover { background-color: var(--bg-modifier-hover); }
+        .server-header svg { transition: transform 0.2s ease; }
+        .server-header.open svg { transform: rotate(180deg); }
         .channel-list { padding: 8px 8px 12px; flex: 1; overflow-y: auto; }
         .channel-category {
-            color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-            margin-top: 18px; margin-bottom: 2px; padding: 0 8px; display: flex; align-items: center; gap: 3px;
+            color: #6d7278; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+            margin-top: 18px; margin-bottom: 4px; padding: 0 8px; display: flex; align-items: center; gap: 3px;
         }
         .channel-item {
-            padding: 7px 8px; margin-bottom: 1px; border-radius: 4px; color: var(--interactive-normal);
+            padding: 8px 10px; margin-bottom: 1px; border-radius: 6px; color: var(--interactive-normal);
             cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 15px;
-            transition: background 0.1s, color 0.1s;
+            transition: background 0.12s, color 0.12s; position: relative;
         }
         .channel-item .channel-label { flex: 1; min-width: 0; }
         .channel-item svg { width: 20px; height: 20px; color: var(--text-muted); flex-shrink: 0; }
         .channel-item:hover { background-color: var(--bg-modifier-hover); color: var(--interactive-hover); }
-        .channel-item.active { background-color: var(--bg-modifier-selected); color: var(--interactive-active); }
-        .channel-item.active svg { color: var(--interactive-active); }
+        .channel-item.active {
+            background-color: rgba(233, 30, 99, 0.12); color: var(--interactive-active);
+        }
+        .channel-item.active::before {
+            content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+            border-radius: 0 3px 3px 0; background: var(--brand-experiment);
+        }
+        .channel-item.active svg { color: #f48fb1; }
 
         .user-panel {
             background-color: var(--bg-secondary-alt); height: 52px; padding: 0 8px; display: flex;
@@ -242,13 +329,36 @@
         }
         .btn-wave:hover { background: var(--bg-modifier-hover); color: var(--interactive-hover); }
 
-        .message { padding: 3px 48px 3px 72px; position: relative; display: flex; flex-direction: column; word-wrap: break-word; transition: background 0.1s;}
+        .messages-container.fade-swap { animation: chatFade 0.22s ease; }
+        @keyframes chatFade {
+            from { opacity: 0.35; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .date-separator {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px 4px;
+            color: var(--text-muted); font-size: 12px; font-weight: 600;
+        }
+        .date-separator::before, .date-separator::after {
+            content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.06);
+        }
+        .message { padding: 4px 48px 4px 76px; position: relative; display: flex; flex-direction: column; word-wrap: break-word; transition: background 0.1s;}
         .message:hover { background-color: var(--bg-modifier-hover); }
-        .message.first { padding-top: 16px; margin-top: 12px; }
-        .msg-avatar { position: absolute; left: 16px; top: 16px; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; object-fit: cover; }
+        .message.first { padding-top: 16px; margin-top: 10px; }
+        .msg-avatar { position: absolute; left: 16px; top: 16px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; object-fit: cover; }
         .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 1px; }
         .msg-username { font-size: 15px; font-weight: 600; color: var(--header-primary); cursor: pointer; line-height: 1.3;}
         .msg-username:hover { text-decoration: underline; }
+        .msg-actions {
+            position: absolute; right: 16px; top: -12px; display: none; gap: 2px;
+            background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 2px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 2;
+        }
+        .message:hover .msg-actions { display: flex; }
+        .msg-action-btn {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; color: var(--interactive-normal); font-size: 15px; cursor: default;
+        }
+        .msg-action-btn:hover { background: var(--bg-modifier-hover); color: #fff; }
         /* Gradient name colors by gender + target */
         .name-m-any { background: linear-gradient(90deg, #5dade2, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .name-m-fem { background: linear-gradient(90deg, #5dade2, #e91e63); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -281,7 +391,7 @@
             .msg-reply-snippet { max-width: 140px; font-size: 11px; }
         }
         .msg-timestamp { font-size: 11px; color: var(--text-muted); font-weight: 500; opacity: 0.85;}
-        .msg-text { font-size: 15px; line-height: 1.45; color: var(--text-normal); font-weight: 400;}
+        .msg-text { font-size: 15px; line-height: 1.4; color: var(--text-normal); font-weight: 400;}
 
         .message-reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
         .reaction-pill {
@@ -289,71 +399,118 @@
             border-radius: 8px; padding: 3px 7px; cursor: pointer; user-select: none; transition: 0.12s;
         }
         .reaction-pill:hover { border-color: var(--bg-modifier-selected); background-color: var(--bg-modifier-hover); }
+        .reaction-pill.reacted {
+            background-color: rgba(233, 30, 99, 0.15);
+            border-color: rgba(233, 30, 99, 0.45);
+        }
+        .reaction-pill.reacted .reaction-count { color: #f48fb1; }
+        .reaction-pill.pop { animation: reactPop 0.28s ease; }
+        @keyframes reactPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.18); }
+            100% { transform: scale(1); }
+        }
         .reaction-pill span.emoji { font-size: 15px; line-height: 1; }
         .reaction-count { font-size: 12px; font-weight: 600; color: var(--interactive-normal); }
 
-        .chat-input-wrapper { padding: 0 16px 20px; flex-shrink: 0;}
+        .chat-input-wrapper { padding: 0 16px max(16px, env(safe-area-inset-bottom)); flex-shrink: 0;}
         .chat-input-container-mobile { display: flex; align-items: center; gap: 10px; background: var(--bg-primary);}
         .btn-circle {
-            width: 32px; height: 32px; background-color: var(--bg-secondary); border-radius: 50%; display: flex; flex-shrink: 0;
+            width: 36px; height: 36px; background-color: var(--bg-secondary); border-radius: 50%; display: flex; flex-shrink: 0;
             align-items: center; justify-content: center; color: var(--interactive-normal); cursor: pointer; font-size: 20px;
             transition: background 0.15s, color 0.15s;
         }
         .btn-circle:hover { background-color: var(--bg-modifier-hover); color: var(--interactive-hover); }
         .chat-input-inner {
-            flex: 1; background-color: var(--bg-secondary); border-radius: 22px; display: flex; align-items: center;
-            padding: 10px 16px; gap: 8px; min-height: 44px;
+            flex: 1; background-color: var(--bg-secondary); border-radius: 24px; display: flex; align-items: center;
+            padding: 11px 18px; gap: 8px; min-height: 46px;
+            border: 1px solid transparent; transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .chat-input-inner:focus-within {
+            border-color: rgba(233,30,99,0.45);
+            box-shadow: 0 0 0 3px rgba(233,30,99,0.12);
         }
         .chat-input-inner input { background: none; border: none; outline: none; width: 100%; color: var(--text-normal); font-size: 15px; }
         .chat-input-extra-icons { display: flex; align-items: center; gap: 16px; color: var(--interactive-normal); }
         .chat-input-extra-icons svg { width: 24px; height: 24px; cursor: pointer; }
 
-        .members-sidebar { width: 240px; background-color: var(--bg-secondary); padding: 0 8px 16px; flex-shrink: 0; overflow-y: auto; z-index: 90;}
-        .member-category { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 24px 0 4px 8px; letter-spacing: 0.02em;}
-        .member-item { display: flex; align-items: center; gap: 12px; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-bottom: 2px; }
-        .member-item:hover { background-color: var(--bg-modifier-hover); }
+        .members-sidebar { width: 248px; background-color: var(--bg-secondary); padding: 0 8px 16px; flex-shrink: 0; overflow-y: auto; z-index: 90;}
+        .member-category {
+            position: sticky; top: 0; z-index: 2;
+            display: inline-flex; align-items: center; gap: 6px;
+            margin: 16px 4px 8px; padding: 5px 10px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+            color: #f8bbd0; text-transform: none;
+            background: rgba(233,30,99,0.12); border: 1px solid rgba(233,30,99,0.2);
+            border-radius: 999px; backdrop-filter: blur(6px);
+        }
+        .member-item { display: flex; align-items: center; gap: 12px; padding: 7px 8px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; transition: background 0.12s; }
+        .member-item:hover { background-color: rgba(255,255,255,0.06); }
         .member-avatar-wrapper { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
         .member-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .member-status { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid var(--bg-secondary); }
+        .member-status { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid var(--bg-secondary); box-shadow: 0 0 0 1px rgba(0,0,0,0.2); }
         .status-online { background-color: var(--green); }
         .status-dnd { background-color: var(--red); }
         .status-idle { background-color: var(--yellow); }
-        .member-name { font-size: 15px; color: var(--text-muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .member-name { font-size: 14px; color: var(--text-muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* Profile Modal */
         #profile-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65);
             display: none; justify-content: center; align-items: center; z-index: 999999;
+            backdrop-filter: blur(4px);
         }
         .profile-card {
-            background-color: var(--bg-floating); width: 340px; border-radius: 8px; overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.24); position: relative; animation: popIn 0.2s ease-out;
+            background: rgba(17, 18, 20, 0.92); width: 360px; border-radius: 14px; overflow: hidden;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4); position: relative; animation: popIn 0.25s ease-out;
+            border: 1px solid rgba(255,255,255,0.06);
         }
-        .profile-banner { height: 120px; width: 100%; background-color: #e91e63; }
+        .profile-banner { height: 140px; width: 100%; background-color: #e91e63; }
         .profile-header { position: relative; padding: 0; }
         .profile-avatar-wrapper-modal {
-            width: 80px; height: 80px; border-radius: 50%; border: 6px solid var(--bg-floating);
-            position: absolute; top: -40px; left: 16px; background: var(--bg-floating);
+            width: 88px; height: 88px; border-radius: 50%; border: 6px solid #111214;
+            position: absolute; top: -44px; left: 16px; background: #111214;
         }
         .profile-avatar-modal { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .profile-modal-status { 
-            position: absolute; bottom: 0px; right: 0px; width: 20px; height: 20px; 
-            border-radius: 50%; border: 4px solid var(--bg-floating); 
+            position: absolute; bottom: 0px; right: 0px; width: 22px; height: 22px; 
+            border-radius: 50%; border: 4px solid #111214; 
         }
-        .profile-badges { display: flex; justify-content: flex-end; padding: 12px 16px 12px 0; gap: 4px; height: 46px; }
+        .profile-badges { display: flex; justify-content: flex-end; padding: 12px 16px 12px 0; gap: 4px; height: 50px; }
         .badge { width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #232428; color: var(--interactive-normal); }
-        .profile-info { background-color: #232428; margin: 0 16px 16px; padding: 12px; border-radius: 8px; }
+        .profile-info {
+            background: rgba(35, 36, 40, 0.85); margin: 0 16px 16px; padding: 14px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+        }
         .profile-name { font-size: 20px; font-weight: 700; color: #f2f3f5; line-height: 1.2; margin-bottom: 2px;}
         .profile-username { font-size: 14px; color: #dbdee1; font-weight: 500; margin-bottom: 12px; }
         .profile-pronouns { font-size: 14px; color: #dbdee1; margin-bottom: 12px; }
-        .profile-divider { height: 1px; background-color: #313338; margin: 12px 0; }
-        .profile-section-title { font-size: 12px; font-weight: 800; color: #b5bac1; text-transform: uppercase; margin-bottom: 8px; }
-        .profile-about { font-size: 14px; color: #dbdee1; line-height: 1.375; white-space: pre-wrap; }
-        .roles-container { display: flex; flex-wrap: wrap; gap: 4px; }
-        .role-pill { background-color: #2b2d31; border: 1px solid #1e1f22; border-radius: 4px; padding: 4px 6px; font-size: 12px; display: flex; align-items: center; gap: 4px; font-weight: 500; color: #dbdee1; }
+        .profile-divider { height: 1px; background-color: rgba(255,255,255,0.08); margin: 12px 0; }
+        .profile-section-title { font-size: 12px; font-weight: 800; color: #b5bac1; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em; }
+        .profile-about { font-size: 14px; color: #dbdee1; line-height: 1.4; white-space: pre-wrap; }
+        .roles-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        .role-pill {
+            background-color: rgba(43,45,49,0.9); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 999px; padding: 5px 10px; font-size: 12px;
+            display: flex; align-items: center; gap: 6px; font-weight: 500; color: #dbdee1;
+        }
+        /* Void theme */
+        body.void-theme {
+            --bg-primary: #1a1b1e;
+            --bg-secondary: #141517;
+            --bg-secondary-alt: #101114;
+            --bg-tertiary: #0c0d0f;
+            --bg-floating: #0a0a0c;
+        }
+        body.void-theme .chat-area { background: #121316; }
         .role-circle { width: 12px; height: 12px; border-radius: 50%; }
-        .btn-dm { display: block; background-color: #e91e63; color: white; text-align: center; padding: 8px 16px; margin-top: 16px; border-radius: 4px; font-weight: 500; font-size: 14px; width: 100%; border: none; cursor: pointer; }
-        .btn-dm:hover { background-color: #c2185b; }
+        .btn-dm {
+            display: block; background: linear-gradient(135deg, #e91e63, #c2185b); color: white; text-align: center;
+            padding: 12px 16px; margin-top: 16px; border-radius: 10px; font-weight: 700; font-size: 14px;
+            width: 100%; border: none; cursor: pointer; letter-spacing: 0.02em;
+            box-shadow: 0 4px 16px rgba(233,30,99,0.3); transition: filter 0.15s, transform 0.15s;
+        }
+        .btn-dm:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
         /* === SERVER INFO MODAL (like Discord) === */
         #server-info-modal {
@@ -416,18 +573,21 @@
         }
 
         @media (max-width: 800px) {
-            .mobile-menu-btn { display: block; }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin-right: 4px; }
             .header-tools { display: none; }
             .chat-header-subtext { display: block; }
             .chat-header-title { flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2; }
             .sidebar-wrapper {
-                position: absolute; left: 0; top: 0; bottom: 0; width: 85%; max-width: 340px;
+                position: absolute; left: 0; top: 0; bottom: 0; width: 88%; max-width: 360px;
                 transform: translateX(-100%); transition: transform 0.3s ease;
                 box-shadow: 4px 0 24px rgba(0,0,0,0.5);
             }
             .channel-sidebar { width: calc(100% - 72px); }
+            .chat-input-wrapper { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+            .message { padding-right: 16px; }
+            .msg-actions { display: none !important; }
             .members-sidebar {
-                position: absolute; right: 0; top: 0; bottom: 0; width: 85%; max-width: 320px;
+                position: absolute; right: 0; top: 0; bottom: 0; width: 88%; max-width: 340px;
                 transform: translateX(100%); transition: transform 0.3s ease; box-shadow: -4px 0 24px rgba(0,0,0,0.5);
             }
             body.show-left-nav .sidebar-wrapper { transform: translateX(0); }
@@ -458,30 +618,45 @@
     <!-- ONBOARDING -->
     <div id="onboarding-container">
         <div class="onboarding-card active" id="step-1">
-            <h2>Welcome to Rahim Anget</h2>
-            <p>Private server. Before you enter, what is your gender?</p>
-            <div class="btn-option" onclick="selectOption('gender', 'Male')">Male</div>
-            <div class="btn-option" onclick="selectOption('gender', 'Female')">Female</div>
-            <div class="btn-option" onclick="selectOption('gender', 'Any')">Non-Binary / Any</div>
+            <div class="ob-brand">
+                <img src="https://file.garden/aGgA7xAxFEwFoSQZ/IMG_20260920_160519.png" alt="Rahim Anget">
+            </div>
+            <div class="ob-progress" data-step="1">
+                <span class="ob-dot on"></span><span class="ob-dot"></span><span class="ob-dot"></span><span class="ob-dot"></span>
+            </div>
+            <h2>Who’s entering?</h2>
+            <p>Private server. Pick your gender so the room knows how to read you.</p>
+            <div class="btn-option" onclick="selectOption('gender', 'Male', this)"><span class="ob-ico">♂</span> Male</div>
+            <div class="btn-option" onclick="selectOption('gender', 'Female', this)"><span class="ob-ico">♀</span> Female</div>
+            <div class="btn-option" onclick="selectOption('gender', 'Any', this)"><span class="ob-ico">☿</span> Non-Binary / Any</div>
             <button class="btn-continue" id="btn-next-1" disabled onclick="nextStep(2)">Continue</button>
         </div>
         <div class="onboarding-card" id="step-2">
-            <h2>Who are you looking to meet?</h2>
-            <p>This will customize the members you see.</p>
-            <div class="btn-option" onclick="selectOption('pref', 'Male')">Guys Only</div>
-            <div class="btn-option" onclick="selectOption('pref', 'Female')">Girls Only</div>
-            <div class="btn-option" onclick="selectOption('pref', 'Any')">Anyone (Mixed)</div>
+            <div class="ob-progress" data-step="2">
+                <span class="ob-dot on"></span><span class="ob-dot on"></span><span class="ob-dot"></span><span class="ob-dot"></span>
+            </div>
+            <h2>Who are you hunting?</h2>
+            <p>This filters who shows up in chat and the member list.</p>
+            <div class="btn-option" onclick="selectOption('pref', 'Male', this)"><span class="ob-ico">🍆</span> Guys only</div>
+            <div class="btn-option" onclick="selectOption('pref', 'Female', this)"><span class="ob-ico">🍑</span> Girls only</div>
+            <div class="btn-option" onclick="selectOption('pref', 'Any', this)"><span class="ob-ico">✨</span> Anyone (mixed)</div>
             <button class="btn-continue" id="btn-next-2" disabled onclick="nextStep(3)">Continue</button>
         </div>
         <div class="onboarding-card" id="step-3">
-            <h2>What's your display name?</h2>
-            <p>This is how others will see you in chat.</p>
-            <input type="text" class="input-text" id="user-display-name" placeholder="Enter username..." oninput="checkName()">
+            <div class="ob-progress" data-step="3">
+                <span class="ob-dot on"></span><span class="ob-dot on"></span><span class="ob-dot on"></span><span class="ob-dot"></span>
+            </div>
+            <h2>Display name</h2>
+            <p>This is how the room will tag and see you.</p>
+            <input type="text" class="input-text" id="user-display-name" placeholder="Enter username..." oninput="checkName()" maxlength="32">
             <button class="btn-continue" id="btn-next-3" disabled onclick="nextStep(4)">Continue</button>
         </div>
         <div class="onboarding-card" id="step-4">
-            <h2>Choose an Avatar</h2>
-            <p>Select your persona.</p>
+            <div class="ob-progress" data-step="4">
+                <span class="ob-dot on"></span><span class="ob-dot on"></span><span class="ob-dot on"></span><span class="ob-dot on"></span>
+            </div>
+            <h2>Pick a face</h2>
+            <p>Your avatar for the night.</p>
             <div class="pfp-grid">
                 <img src="https://file.garden/aGgA7xAxFEwFoSQZ/375d0b066cda70af840b4371a81f21c0%20(1).jpg" class="pfp-option" onclick="selectPfp(this)">
                 <img src="https://file.garden/aGgA7xAxFEwFoSQZ/9647ba30da8fb9b7d7b6ad7b312b4a4c.jpg" class="pfp-option" onclick="selectPfp(this)">
@@ -565,6 +740,7 @@
                         </div>
                     </div>
                     <div class="user-controls">
+                        <div class="control-btn" title="Void theme" onclick="toggleVoidTheme()" style="font-size:14px;">🌑</div>
                         <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-mic"></use></svg></div>
                         <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-deafen"></use></svg></div>
                         <div class="control-btn"><svg viewBox="0 0 24 24"><use href="#icon-settings"></use></svg></div>
@@ -732,11 +908,11 @@
     <script>
         let userData = { gender: '', pref: '', name: '', pfp: '' };
 
-        function selectOption(type, value) {
+        function selectOption(type, value, el) {
             userData[type] = value;
             let step = type === 'gender' ? 1 : 2;
             document.querySelectorAll(`#step-${step} .btn-option`).forEach(c => c.classList.remove('selected'));
-            event.target.classList.add('selected');
+            if (el) el.classList.add('selected');
             document.getElementById(`btn-next-${step}`).disabled = false;
         }
         function checkName() {
@@ -747,11 +923,34 @@
             userData.pfp = img.src;
             document.querySelectorAll('.pfp-option').forEach(i => i.classList.remove('selected'));
             img.classList.add('selected');
-            document.getElementById('btn-next-4').disabled = false;
+            const btn = document.getElementById('btn-next-4');
+            btn.disabled = false;
+            btn.classList.add('ready-pulse');
         }
         function nextStep(num) {
             document.querySelectorAll('.onboarding-card').forEach(c => c.classList.remove('active'));
-            document.getElementById(`step-${num}`).classList.add('active');
+            const card = document.getElementById(`step-${num}`);
+            card.classList.add('active');
+            // re-trigger enter animation
+            card.style.animation = 'none';
+            void card.offsetWidth;
+            card.style.animation = '';
+        }
+        function toggleReact(el) {
+            const countEl = el.querySelector('.reaction-count');
+            let n = parseInt(el.dataset.count || countEl.textContent, 10) || 0;
+            if (el.classList.contains('reacted')) {
+                el.classList.remove('reacted');
+                n = Math.max(0, n - 1);
+            } else {
+                el.classList.add('reacted');
+                n += 1;
+            }
+            el.dataset.count = n;
+            countEl.textContent = n;
+            el.classList.remove('pop');
+            void el.offsetWidth;
+            el.classList.add('pop');
         }
         function enterServer() {
             document.getElementById('onboarding-container').style.display = 'none';
@@ -782,10 +981,8 @@
         function switchChannel(channelId, element) {
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-            // Use clean label only (ignore badge "1")
             const labelEl = element.querySelector('.channel-label');
             let text = labelEl ? labelEl.innerText.trim() : element.innerText.replace(/\d+$/, '').trim();
-            // Fallback map for channels without label span
             const nameMap = { rules: 'rules-and-info', general: 'general', kink: 'kink-talk', looking: 'looking-for', media: 'media' };
             if (nameMap[channelId]) text = nameMap[channelId];
             document.getElementById('current-channel-title').innerText = text;
@@ -796,20 +993,31 @@
                 document.getElementById('chat-input-container').style.display = 'none';
             } else {
                 currentChannel = channelId;
-                document.getElementById('view-chat').style.display = 'flex';
+                const box = document.getElementById('view-chat');
+                box.style.display = 'flex';
                 document.getElementById('chat-input-container').style.display = 'block';
-                document.getElementById('chat-type-box').placeholder = `Message #${text}...`;
+                document.getElementById('chat-type-box').placeholder = `Message #${text}`;
                 renderChat(channelId);
+                box.classList.remove('fade-swap');
+                void box.offsetWidth;
+                box.classList.add('fade-swap');
             }
             closeMobileMenus();
         }
 
         function openServerInfo() {
             document.getElementById('server-info-modal').style.display = 'flex';
+            const hdr = document.querySelector('.server-header');
+            if (hdr) hdr.classList.add('open');
+        }
+        function toggleVoidTheme() {
+            document.body.classList.toggle('void-theme');
         }
         function closeServerInfo(e) {
             if (!e || e.target.id === 'server-info-modal' || e.target.classList.contains('server-info-close')) {
                 document.getElementById('server-info-modal').style.display = 'none';
+                const hdr = document.querySelector('.server-header');
+                if (hdr) hdr.classList.remove('open');
             }
         }
 
@@ -1124,6 +1332,34 @@
                 about: "I wish I have someone as tight as my schedule rn, ngh~",
                 roles: [ { name: "Verified", color: "#3498db" }, { name: "VA", color: "#9b59b6" }, { name: "Cucking", color: "#e91e63" }, { name: "Campus", color: "#3498db" } ],
                 dm: "https://janitorai.com/profiles/550c9b17-342c-479b-8c3a-7ce0a35dfb99_profile-of-arialtofox"
+            },
+            diah: {
+                id: 'diah', name: "DiahMWIII", username: "diahmw", gender: "Female", targetUser: "Male",
+                nameClass: "name-f-male",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/from-PixAI-2055070261609317554-2.png",
+                pronouns: "she/her", color: "#e91e63", banner: "#5d6d7e", status: "status-idle",
+                about: "Veteran lurker, s-s-sepertinya aku melakukan kesalahan (。_。)",
+                roles: [
+                    { name: "Verified", color: "#e91e63" },
+                    { name: "Lurker", color: "#7f8c8d" },
+                    { name: "Modest", color: "#95a5a6" },
+                    { name: "Shy", color: "#9b59b6" }
+                ],
+                dm: "https://janitorai.com/profiles/7361629d-e11c-42a2-b213-f5edfe17e11a_profile-of-a-shroud"
+            },
+            sampoerna: {
+                id: 'sampoerna', name: "Batang Sampoerna", username: "Semeninstan", gender: "Male", targetUser: "Female",
+                nameClass: "name-m-fem",
+                pfp: "https://file.garden/aGgA7xAxFEwFoSQZ/1790195141597.png",
+                pronouns: "he/him", color: "#3498db", banner: "#1a5276", status: "status-online",
+                about: "Cepat keras, kokoh, dan siap \"dicrot\" kapan saja",
+                roles: [
+                    { name: "Verified", color: "#3498db" },
+                    { name: "Kepala 5", color: "#e67e22" },
+                    { name: "Kost Daddy", color: "#c0392b" },
+                    { name: "Daun Muda Only", color: "#e91e63" }
+                ],
+                dm: "https://janitorai.com/profiles/cff58122-0b8d-46b0-9d10-5251c941a5cc_profile-of-shyfang"
             }
         };
 
@@ -1191,101 +1427,155 @@
             const showHelios = canShow(characters.helios);
             const showRagi = canShow(characters.maharaja);
             const showSal = canShow(characters.sal);
+            const showDiah = canShow(characters.diah);
+            const showSampo = canShow(characters.sampoerna);
 
-            // ========== #general — threaded back-and-forth ==========
+            // ========== #general — one continuous room thread ==========
+            // 1) welcomes
             if (showN) {
                 chatDB.general.push({id: 'nathan', text: `welcome ${name}`,
                     reacts: [{emoji: "🫶", count: 10}, {emoji: "✨", count: 9}]});
             }
             if (showA) {
-                chatDB.general.push({id: 'ava', text: `hai ${name}~`,
+                chatDB.general.push({id: 'ava', replyTo: showN ? { name: "pro injector 💉", snippet: `welcome ${name}` } : null, text: `hai ${name}~`,
                     reacts: [{emoji: "👋🏽", count: 9}, {emoji: "🫶", count: 6}, {emoji: "✨", count: 4}]});
             }
             if (showB) {
-                chatDB.general.push({id: 'bee', text: `haloo ${name}`,
+                chatDB.general.push({id: 'bee', replyTo: showA ? { name: "Ava", snippet: `hai ${name}~` } : (showN ? { name: "pro injector 💉", snippet: `welcome ${name}` } : (showDiah ? { name: "DiahMWIII", snippet: "welcome" } : null)), text: `yo ${name}`,
                     reacts: [{emoji: "🫶", count: 7}, {emoji: "✨", count: 5}]});
             }
+            if (showDiah && !showN && !showA) {
+                chatDB.general.push({id: 'diah', replyTo: showB ? { name: "🐝", snippet: `yo ${name}` } : null, text: `h-hai ${name}... s-selamat datang (。_。) <i>h-hi ${name}... welcome (。_。)</i>`,
+                    reacts: [{emoji: "👋🏽", count: 6}, {emoji: "✨", count: 4}]});
+            }
             if (showK) {
-                chatDB.general.push({id: 'dicka', text: `yo ${name}`,
+                chatDB.general.push({id: 'dicka', replyTo: showB ? { name: "🐝", snippet: `yo ${name}` } : (showN ? { name: "pro injector 💉", snippet: `welcome ${name}` } : null), text: `yo ${name}`,
                     reacts: [{emoji: "✨", count: 8}, {emoji: "🫶", count: 6}, {emoji: "👋🏽", count: 4}]});
             }
 
+            // 2) morning / wife / traffic chain
             if (showR) {
-                chatDB.general.push({id: 'rudi', text: "Selamat pagi,,, baru turun dari truk,,, istri gue langsung telepon 🥰 katanya kangen 👍🏻 <i>Good morning,,, just got off the truck,,, wife called right away 🥰 said she misses me 👍🏻</i>",
-                    reacts: [{emoji: "😒", count: 6}, {emoji: "👋🏽", count: 4}]});
-                if (showV) chatDB.general.push({id: 'ved', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "Selamat pagi,,, baru turun dari truk..." }, text: "anjing rudi tiap hari cerita istri. gue iri tapi males ngaku. <i>damn rudi talks about his wife every day. i'm jealous but won't admit it.</i>",
-                    reacts: [{emoji: "❤️", count: 8}, {emoji: "🤣", count: 8}, {emoji: "☝🏻", count: 4}]});
+                chatDB.general.push({id: 'rudi', text: "Selamat pagi,, baru turun dari truk,, istri gue langsung telepon 🥰 katanya kangen 👍🏻 <i>Good morning,, just got off the truck,, wife called right away 🥰 said she misses me 👍🏻</i>",
+                    reacts: [{emoji: "🫶", count: 6}, {emoji: "👋🏽", count: 4}]});
+                if (showV) chatDB.general.push({id: 'ved', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "Selamat pagi,, baru turun dari truk..." }, text: "anjing rudi tiap hari cerita istri. gue iri tapi males ngaku. <i>damn rudi talks about his wife every day. i'm jealous but won't admit it.</i>",
+                    reacts: [{emoji: "❤️", count: 8}, {emoji: "🥰", count: 8}, {emoji: "💕", count: 4}]});
                 if (showD) chatDB.general.push({id: 'dosen', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "istri gue langsung telepon..." }, text: "rudi gila. gue masih ngoreksi tugas jam segini. <i>rudi is crazy. i'm still grading papers at this hour.</i>",
-                    reacts: [{emoji: "🤍", count: 10}, {emoji: "😭", count: 5}, {emoji: "🚛", count: 4}]});
+                    reacts: [{emoji: "🤍", count: 10}, {emoji: "💕", count: 5}, {emoji: "🍼", count: 4}]});
+                if (showSampo) chatDB.general.push({id: 'sampoerna', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "istri gue langsung telepon..." }, text: "emang udh mau kepala 5, tapi urusan ranjang mah boleh adu sm anak muda jaman skrg. bini kedua dlu sampe ampun-ampunan saking gak kuat tiap malem digeber terus wkwk. <i>Already almost turning 50, but when it comes to the bedroom, I can still go toe-to-toe with the youth of today. My second wife used to beg for mercy because she couldn't handle being driven hard every single night, lol.</i>",
+                    reacts: [{emoji: "😂", count: 9}, {emoji: "🔥", count: 7}, {emoji: "💀", count: 5}]});
             }
 
             if (showV) {
-                chatDB.general.push({id: 'ved', text: "jalanan macet banget jam segini, beneran bikin emosi. <i>traffic is fucked up at this hour, actually pisses me off.</i>",
+                chatDB.general.push({id: 'ved', replyTo: showR ? { name: "pak rudi sayang istri 🚛", snippet: "baru turun dari truk..." } : null, text: "jalanan macet banget jam segini, beneran bikin emosi. <i>traffic is fucked up at this hour, actually pisses me off.</i>",
                     reacts: [{emoji: "💼", count: 9}, {emoji: "☕", count: 8}, {emoji: "😤", count: 8}]});
                 if (showK) chatDB.general.push({id: 'dicka', replyTo: { name: "ved.", snippet: "jalanan macet banget jam segini..." }, text: "biasa. jakarta mah gitu. lo masih di jalan? <i>normal. jakarta is like that. still on the road?</i>",
                     reacts: [{emoji: "🤍", count: 5}, {emoji: "💕", count: 4}]});
+                if (showHelios) chatDB.general.push({id: 'helios', replyTo: { name: "ved.", snippet: "jalanan macet banget jam segini..." }, text: "spill dulu, wkwk gatel bgt ini meetingnya ngaret jirr. i just wanna go home maann this script isn’t gonna record itself <i>lmao i’m frustrated this meeting’s going overtime</i>",
+                    reacts: [{emoji: "😤", count: 8}, {emoji: "💼", count: 4}]});
             }
 
+            // 3) clinic / work / stress chain
             if (showN) {
                 chatDB.general.push({id: 'nathan', text: "stok pil kontrasepsi dan penyubur baru datang. kalau butuh langsung chat. jangan beli sembarangan di luar. <i>new stock of birth control and fertility pills just arrived. if you need any, chat me. don’t buy randomly outside.</i>",
                     reacts: [{emoji: "😂", count: 10}, {emoji: emotes.fire, count: 8}, {emoji: emotes.eyes, count: 4}]});
                 if (showD) chatDB.general.push({id: 'dosen', replyTo: { name: "pro injector 💉", snippet: "stok pil kontrasepsi dan penyubur..." }, text: "siap. gw butuh yang penyubur juga. <i>got it. i need the fertility ones too.</i>",
                     reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.eyes, count: 7}, {emoji: "😂", count: 4}]});
             }
+            if (showArka) {
+                chatDB.general.push({id: 'arka', replyTo: showN ? { name: "pro injector 💉", snippet: "stok pil kontrasepsi..." } : null, text: "Anjingg lahhh, i can't even catch a break for a single day, huh? my employee almost made my fucking business doomed. before u ask, yes i fired that fucker.",
+                    reacts: [{emoji: "💼", count: 8}, {emoji: "😤", count: 6}]});
+                if (showDiah) chatDB.general.push({id: 'diah', replyTo: { name: "CEO of sawit", snippet: "Anjingg lahhh, i can't even catch a break..." }, text: "Hooo i see . . . Is that also one of the reason why you evading taxes ? (。﹏。)",
+                    reacts: [{emoji: "😂", count: 7}, {emoji: "👀", count: 5}]});
+                if (showDiah && showArka) chatDB.general.push({id: 'arka', replyTo: { name: "DiahMWIII", snippet: "evading taxes ?" }, text: "mind your business. my accountant handles that.",
+                    reacts: [{emoji: "💼", count: 6}, {emoji: "😂", count: 5}]});
+            }
 
+            // 4) style / chill
             if (showA) {
                 chatDB.general.push({id: 'ava', text: "layering outer tadi liat di ootd channel... style dia sebenernya lumayan, which is rare, tp layering nya off bgt LMAO <i>saw the layering in ootd channel... her style is actually quite good, which is rare, but the layering is really off LMAO</i>",
                     reacts: [{emoji: emotes.eyes, count: 8}, {emoji: "😂", count: 7}, {emoji: emotes.fire, count: 6}]});
                 if (showI) chatDB.general.push({id: 'anita', replyTo: { name: "Ava", snippet: "layering outer tadi liat di ootd..." }, text: "agree. half-assed effort. keep up or get out.",
                     reacts: [{emoji: emotes.eyes, count: 8}, {emoji: emotes.fire, count: 7}]});
             }
-
             if (showI && !showA) {
                 chatDB.general.push({id: 'anita', text: "quality over quantity. always.",
                     reacts: [{emoji: "😂", count: 8}, {emoji: emotes.eyes, count: 7}]});
             }
-
             if (showB) {
-                chatDB.general.push({id: 'bee', text: "lagi chillin. face verify dulu kalau mau chat. <i>just chilling. face verify first if you want to chat.</i>",
+                chatDB.general.push({id: 'bee', replyTo: showA ? { name: "Ava", snippet: "layering outer..." } : (showDiah ? { name: "DiahMWIII", snippet: "h-hai" } : null), text: "lagi chillin. face verify dulu kalau mau chat. <i>just chilling. face verify first if you want to chat.</i>",
                     reacts: [{emoji: emotes.fire, count: 5}, {emoji: emotes.eyes, count: 5}]});
+                if (showDiah) {
+                    chatDB.general.push({id: 'diah', replyTo: { name: "🐝", snippet: "lagi chillin. face verify..." }, text: "Hooo i see . . . face verify ya... aku malu kalo foto aku jelek (。﹏。) <i>Hooo i see . . . face verify huh... I'm shy if my photo looks bad (。﹏。)</i>",
+                        reacts: [{emoji: "😂", count: 7}, {emoji: "👀", count: 5}]});
+                    chatDB.general.push({id: 'bee', replyTo: { name: "DiahMWIII", snippet: "face verify ya..." }, text: "santai aja. yg penting bukan catfish. <i>relax. as long as you're not a catfish.</i>",
+                        reacts: [{emoji: "✨", count: 6}, {emoji: "😂", count: 4}]});
+                }
             }
 
-            // ========== #kink-talk — long, filthy, in-character ==========
+            // ========== #kink-talk — one continuous filthy thread ==========
             if (showR) {
-                chatDB.kink.push({id: 'rudi', text: "simple aja, gue mah sederhana,,, yang penting istri terus diisi 🤤 anak banyak jg ttp gue hamilin lagi ☝🏻☝🏻 <i>i’m a simple man,,, what matters is my wife keeps getting filled 🤤 even with many kids i’ll still get her pregnant again ☝🏻☝🏻</i>",
-                    reacts: [{emoji: "🫡", count: 9}, {emoji: "💦", count: 8}, {emoji: "🥰", count: 5}]});
+                chatDB.kink.push({id: 'rudi', text: "simple aja, gue mah sederhana,, yang penting istri terus diisi 🤤 anak banyak jg ttp gue hamilin lagi ☝🏻☝🏻 <i>i’m a simple man,, what matters is my wife keeps getting filled 🤤 even with many kids i’ll still get her pregnant again ☝🏻☝🏻</i>",
+                    reacts: [{emoji: "💕", count: 9}, {emoji: "❤️", count: 8}, {emoji: "🥰", count: 5}]});
             }
             if (showV) {
-                chatDB.kink.push({id: 'ved', text: "real one, when she just takes it all without complaining. seisi-isinya dikeluarin di dalem ampe meluber itu hits different anjeeeeeng. <i>when she just takes it all without complaining. dumping every single drop inside till it spills out hits different, holy fuuuuck.</i>",
+                chatDB.kink.push({id: 'ved', replyTo: showR ? { name: "pak rudi sayang istri 🚛", snippet: "istri terus diisi..." } : null, text: "real one, when she just takes it all without complaining. seisi-isinya dikeluarin di dalem ampe meluber itu hits different anjeeeeeng. <i>when she just takes it all without complaining. dumping every single drop inside till it spills out hits different, holy fuuuuck.</i>",
                     reacts: [{emoji: emotes.eyes, count: 10}, {emoji: "😂", count: 5}]});
             }
             if (showD) {
-                chatDB.kink.push({id: 'dosen', text: "lanjut, “Sumpah, aroma kasur pas ditinggal dia pulang tadi subuh masih kecium bau khas lendirnya candu banget.\" <i>Swear to God, the smell of the bed right after she left early this morning still has that distinct scent of her body fluids, it's so addictive.</i>",
+                chatDB.kink.push({id: 'dosen', replyTo: showV ? { name: "ved.", snippet: "seisi-isinya dikeluarin di dalem..." } : (showR ? { name: "pak rudi sayang istri 🚛", snippet: "istri terus diisi..." } : null), text: "lanjut, “Sumpah, aroma kasur pas ditinggal dia pulang tadi subuh masih kecium bau khas lendirnya candu banget.\" <i>Swear to God, the smell of the bed right after she left early this morning still has that distinct scent of her body fluids, it's so addictive.</i>",
                     reacts: [{emoji: "🍼", count: 8}, {emoji: "💕", count: 5}, {emoji: "🤍", count: 5}]});
                 chatDB.kink.push({id: 'dosen', text: "\"Sialan, lagi nunggu momen pas dia lengah. Sengaja gak pake pengaman dengan dalih 'khilaf dikit' pas lagi panas-panasnya. Biar dia panik dikit, terus langsung gampang gw desak buat cepet-cepet nikah biar bisa dibuntingin tiap hari. 🙂\" <i>Damn it, just waiting for a moment when she drops her guard. I purposely didn't use protection under the guise of a 'small lapse in judgment' while things were heated. Just to make her panic a bit, so I can easily pressure her into marrying me right away so I can knock her up every day. 🙂</i>",
                     reacts: [{emoji: "😂", count: 10}, {emoji: emotes.eyes, count: 7}, {emoji: emotes.fire, count: 6}]});
             }
+            if (showV && showD) {
+                chatDB.kink.push({id: 'ved', replyTo: { name: "Mas_Dosen", snippet: "Sengaja gak pake pengaman dengan dalih 'khilaf dikit'..." }, text: "dosen gila. sengaja biarin panik biar gampang dibuntingin. respect. <i>dosen is crazy. purposely letting her panic so she's easy to knock up. respect.</i>",
+                    reacts: [{emoji: "😭", count: 9}, {emoji: "😂", count: 4}]});
+            }
             if (showK) {
-                chatDB.kink.push({id: 'dicka', text: "hot take, nyenyenyenye vanilla bosenin banget goblok, ewh. gue mah suka yang kasar, nangis dikit malah makin enak. <i>blablabla, vanilla is boring asf, ewh. i like it rough, a little crying makes it even better.</i>",
+                chatDB.kink.push({id: 'dicka', replyTo: showV ? { name: "ved.", snippet: "takes it all without complaining..." } : (showD ? { name: "Mas_Dosen", snippet: "khilaf dikit..." } : null), text: "hot take, nyenyenyenye vanilla bosenin banget goblok, ewh. gue mah suka yang kasar, nangis dikit malah makin enak. <i>blablabla, vanilla is boring asf, ewh. i like it rough, a little crying makes it even better.</i>",
                     reacts: [{emoji: "😭", count: 6}, {emoji: "😂", count: 5}]});
             }
+            // Bee kink (always if present) — talks to room or to Diah
+            if (showB) {
+                if (showV) {
+                    chatDB.kink.push({id: 'bee', replyTo: { name: "ved.", snippet: "when she just takes it all..." }, text: "anjing yang gitu sih bikin gue basah. no clingy after though. <i>shit like that gets me wet. no clingy after though.</i>",
+                        reacts: [{emoji: "🔥", count: 9}, {emoji: "💦", count: 7}]});
+                } else if (showDiah) {
+                    chatDB.kink.push({id: 'bee', text: "jujur aja, kadang gue cuma mau digilir sampe lemes trus sleep. no drama. <i>honestly, sometimes I just wanna get used till I'm limp then sleep. no drama.</i>",
+                        reacts: [{emoji: "🔥", count: 8}, {emoji: "👀", count: 6}]});
+                } else {
+                    chatDB.kink.push({id: 'bee', text: "jujur aja, kadang gue cuma mau digilir sampe lemes trus sleep. no drama. <i>honestly, sometimes I just wanna get used till I'm limp then sleep. no drama.</i>",
+                        reacts: [{emoji: "🔥", count: 8}, {emoji: "👀", count: 6}]});
+                }
+            }
+            if (showDiah) {
+                if (showV) chatDB.kink.push({id: 'diah', replyTo: { name: "ved.", snippet: "when she just takes it all..." }, text: "... I really doesn't realize you could do that way when copulating (⊙﹏⊙)",
+                    reacts: [{emoji: "😳", count: 8}, {emoji: "👀", count: 6}]});
+                else if (showD) chatDB.kink.push({id: 'diah', replyTo: { name: "Mas_Dosen", snippet: "Sengaja gak pake pengaman..." }, text: "... I really doesn't realize you could do that way when copulating (⊙﹏⊙)",
+                    reacts: [{emoji: "😳", count: 8}, {emoji: "👀", count: 6}]});
+                else if (showB) chatDB.kink.push({id: 'diah', replyTo: { name: "🐝", snippet: "digilir sampe lemes..." }, text: "... I really doesn't realize you could do that way when copulating (⊙﹏⊙)",
+                    reacts: [{emoji: "😳", count: 8}, {emoji: "👀", count: 6}]});
+                else chatDB.kink.push({id: 'diah', text: "... I really doesn't realize you could do that way when copulating (⊙﹏⊙)",
+                    reacts: [{emoji: "😳", count: 8}, {emoji: "👀", count: 6}]});
+                if (showR) chatDB.kink.push({id: 'diah', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "istri terus diisi..." }, text: "... I somehow feeling .. a bit .. turned on after reading you guys experience. Especially .. Creampie think, somehow my mouth is drool just now ༼ つ ◕_◕ ༽つ",
+                    reacts: [{emoji: "🥵", count: 9}, {emoji: "💦", count: 7}, {emoji: "😳", count: 5}]});
+                else if (showB) {
+                    chatDB.kink.push({id: 'diah', replyTo: { name: "🐝", snippet: "no drama..." }, text: "... I somehow feeling .. a bit .. turned on after reading you guys experience. Especially .. Creampie think, somehow my mouth is drool just now ༼ つ ◕_◕ ༽つ",
+                        reacts: [{emoji: "🥵", count: 9}, {emoji: "💦", count: 7}, {emoji: "😳", count: 5}]});
+                    chatDB.kink.push({id: 'bee', replyTo: { name: "DiahMWIII", snippet: "mouth is drool just now..." }, text: "lmao diah sange di chat. gas dm kalo berani, jangan cuma drool. <i>lmao diah's horny in chat. just dm if you dare, don't only drool.</i>",
+                        reacts: [{emoji: "🔥", count: 8}, {emoji: "😂", count: 6}]});
+                } else chatDB.kink.push({id: 'diah', text: "... I somehow feeling .. a bit .. turned on after reading you guys experience. Especially .. Creampie think, somehow my mouth is drool just now ༼ つ ◕_◕ ༽つ",
+                    reacts: [{emoji: "🥵", count: 9}, {emoji: "💦", count: 7}, {emoji: "😳", count: 5}]});
+                if (showV) chatDB.kink.push({id: 'ved', replyTo: { name: "DiahMWIII", snippet: "turned on after reading you guys..." }, text: "lmao she's drooling in the chat. gas langsung dm kalo berani. <i>lmao she's drooling in the chat. just dm if you dare.</i>",
+                    reacts: [{emoji: "🔥", count: 8}, {emoji: "😂", count: 6}]});
+            }
             if (showA) {
-                chatDB.kink.push({id: 'ava', text: "honestly, at the end of the day, dia bakal meluk kaki gwa sambil nangis-nangis minta ampun. And I love seeing that desperate look on her, bikin gwa makin pengen ngancurin dia ampe ga bersisa. <i>At the end of the day, she will hug my feet while crying for forgiveness. And I love seeing that desperate look on her, makes me want to destroy her even more until there's nothing left.</i>",
+                chatDB.kink.push({id: 'ava', replyTo: showK ? { name: "Dick(a)", snippet: "vanilla bosenin banget..." } : (showV ? { name: "ved.", snippet: "takes it all..." } : null), text: "honestly, at the end of the day, dia bakal meluk kaki gwa sambil nangis-nangis minta ampun. And I love seeing that desperate look on her, bikin gwa makin pengen ngancurin dia ampe ga bersisa. <i>At the end of the day, she will hug my feet while crying for forgiveness. And I love seeing that desperate look on her, makes me want to destroy her even more until there's nothing left.</i>",
                     reacts: [{emoji: "😈", count: 8}, {emoji: "🖤", count: 7}, {emoji: emotes.fire, count: 6}]});
             }
             if (showI) {
-                chatDB.kink.push({id: 'anita', text: "listen, Kneel. Dia udah tanda tangan kontrak dan jual kebebasannya ke aku, ingat? Sekarang jadi sub yang penurut dan lepas pakaiannya sebelum aku hilang kesabaran. <i>Kneel. She signed the contract and sold her freedom to me, remember? Now be a good sub and take off her clothes before I lose my patience.</i>",
+                chatDB.kink.push({id: 'anita', replyTo: showA ? { name: "Ava", snippet: "meluk kaki gwa sambil nangis..." } : null, text: "listen, Kneel. Dia udah tanda tangan kontrak dan jual kebebasannya ke aku, ingat? Sekarang jadi sub yang penurut dan lepas pakaiannya sebelum aku hilang kesabaran. <i>Kneel. She signed the contract and sold her freedom to me, remember? Now be a good sub and take off her clothes before I lose my patience.</i>",
                     reacts: [{emoji: "🖤", count: 10}, {emoji: "😈", count: 4}]});
-            }
-
-            // crude cross-reactions with reply bars
-            if (showR && showV) {
-                chatDB.kink.push({id: 'ved', replyTo: { name: "pak rudi sayang istri 🚛", snippet: "gue mah sederhana,,, yang penting istri terus diisi..." }, text: "anjing rudi gila banget sama istrinya. gue juga mau yang gitu, diisi sampe pejunya netes. <i>fuck rudi is insane about his wife. i want that too, filled till the cum leaks out.</i>",
-                    reacts: [{emoji: "🥰", count: 9}, {emoji: "💕", count: 8}, {emoji: "❤️", count: 5}]});
-            }
-            if (showD && showV) {
-                chatDB.kink.push({id: 'ved', replyTo: { name: "Mas_Dosen", snippet: "Sengaja gak pake pengaman dengan dalih 'khilaf dikit'..." }, text: "dosen gila. sengaja biarin panik biar gampang dibuntingin. respect. <i>dosen is crazy. purposely letting her panic so she's easy to knock up. respect.</i>",
-                    reacts: [{emoji: "😭", count: 9}, {emoji: "😂", count: 4}]});
             }
             if (showA && showI) {
                 chatDB.kink.push({id: 'anita', replyTo: { name: "Ava", snippet: "at the end of the day, dia bakal meluk kaki gwa..." }, text: "same. contract first, then she learns where she belongs.",
@@ -1308,6 +1598,11 @@
             if (showK) {
                 chatDB.looking.push({id: 'dicka', text: "looking for cocksuckers who wanna explore dickology w/ me. (preferable older, no vanilla)",
                     reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.water, count: 8}]});
+                chatDB.media.push({id: 'dicka', text: `<div style="display:flex;flex-direction:column;gap:8px;">
+                    <img src="https://file.garden/aGgA7xAxFEwFoSQZ/Man_with_bruised_neck_shirtless_2K_20260913191718.jpg" style="max-width:280px;border-radius:8px;">
+                    <img src="https://file.garden/aGgA7xAxFEwFoSQZ/Man_lying_on_dark_surface_2K_20260913133609.jpg" style="max-width:280px;border-radius:8px;">
+                </div><br>Midnight vcs, no chit chat, just dm me with a pic first`,
+                    reacts: [{emoji: "🥵", count: 9}, {emoji: emotes.fire, count: 7}, {emoji: emotes.eyes, count: 6}]});
             }
             if (showB) {
                 chatDB.looking.push({id: 'bee', text: "Lagi pengen. Ada yang free? Face verify dulu. No ugly. <i>Feeling needy. Anyone free? Face verify first. No ugly.</i>",
@@ -1528,9 +1823,11 @@
                     reacts: [{emoji: "😩", count: 9}, {emoji: emotes.water, count: 4}]});
             }
             if (showHelios) {
-                chatDB.general.push({id: 'helios', text: "spill dulu, wkwk gatel bgt ini meetingnya ngaret jirr. i just wanna go home maann this script isn’t gonna record itself <i>lmao i’m frustrated this meeting’s going overtime</i>",
-                    reacts: [{emoji: "😤", count: 8}, {emoji: "💼", count: 4}]});
-                chatDB.kink.push({id: 'helios', text: "idea dump, thinking of recording something with a choking-focus in it, wdyt?",
+                if (!showV) {
+                    chatDB.general.push({id: 'helios', text: "spill dulu, wkwk gatel bgt ini meetingnya ngaret jirr. i just wanna go home maann this script isn’t gonna record itself <i>lmao i’m frustrated this meeting’s going overtime</i>",
+                        reacts: [{emoji: "😤", count: 8}, {emoji: "💼", count: 4}]});
+                }
+                chatDB.kink.push({id: 'helios', replyTo: showV ? { name: "ved.", snippet: "seisi-isinya dikeluarin di dalem..." } : null, text: "idea dump, thinking of recording something with a choking-focus in it, wdyt?",
                     reacts: [{emoji: emotes.fire, count: 9}, {emoji: emotes.eyes, count: 9}, {emoji: "😂", count: 7}]});
                 chatDB.looking.push({id: 'helios', text: "butuh inspirasi malem ini. looking for a pretty woman yg mau diajak vcs sampe cum. i’ll take care of you, dw <i>looking for inspiration tonight. looking for a pretty woman who’s down to do video call sex until we cum.</i>",
                     reacts: [{emoji: "🤍", count: 7}, {emoji: "💕", count: 6}, {emoji: "🍼", count: 6}]});
@@ -1568,6 +1865,50 @@
                     reacts: [{emoji: emotes.fire, count: 10}, {emoji: "😩", count: 7}, {emoji: emotes.water, count: 7}]});
                 chatDB.media.push({id: 'sal', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/0c003d35-228c-43a4-b9f8-17298b7a061d.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>Baru rapih mandi dan abang sange lagi, ada yang mau join gk? <i>Just got out of the shower and I'm horny again, anyone wanna join?</i>`,
                     reacts: [{emoji: "🥵", count: 8}, {emoji: emotes.eyes, count: 7}]});
+            }
+
+            // Diah leftovers — only when they still make sense alone / with Bee
+            if (showDiah) {
+                if (showRen) {
+                    chatDB.general.push({id: 'diah', replyTo: { name: "Mas Renjana", snippet: "tidak semua sesak di malam jumat kliwon..." }, text: "I think i also heard about that rumors. I've experience the same feeling of uneasy whenever walking past the library at fib's building. ... Okay i feel chilly now whenever talking about this.",
+                        reacts: [{emoji: "😳", count: 6}, {emoji: "💀", count: 4}]});
+                } else if (showB && !showArka) {
+                    // already chatted with Bee above; skip lonely tax joke
+                } else if (!showArka && !showB) {
+                    chatDB.general.push({id: 'diah', text: "I think i also heard about that rumors. I've experience the same feeling of uneasy whenever walking past the library at fib's building. ... Okay i feel chilly now whenever talking about this.",
+                        reacts: [{emoji: "😳", count: 6}, {emoji: "💀", count: 4}]});
+                }
+                chatDB.looking.push({id: 'diah', text: "Someone who don't mind with my modest body. I realize there's lack of woman like with my body so ...",
+                    reacts: [{emoji: "👀", count: 8}, {emoji: "🥺", count: 6}]});
+                chatDB.media.push({id: 'diah', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/from-PixAI-2055389862263522366-2.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>I got this really cool night city background near Suramadu Bridge ˋ( ° ▽、° )`,
+                    reacts: [{emoji: "✨", count: 8}, {emoji: "👀", count: 6}]});
+            }
+
+            // Sampo — looking + media only (general already in rudi chain)
+            if (showSampo) {
+                if (!showR) {
+                    chatDB.general.push({id: 'sampoerna', text: "emang udh mau kepala 5, tapi urusan ranjang mah boleh adu sm anak muda jaman skrg. bini kedua dlu sampe ampun-ampunan saking gak kuat tiap malem digeber terus wkwk. <i>Already almost turning 50, but when it comes to the bedroom, I can still go toe-to-toe with the youth of today. My second wife used to beg for mercy because she couldn't handle being driven hard every single night, lol.</i>",
+                        reacts: [{emoji: "😂", count: 9}, {emoji: "🔥", count: 7}, {emoji: "💀", count: 5}]});
+                } else {
+                    chatDB.general.push({id: 'rudi', replyTo: { name: "Batang Sampoerna", snippet: "bini kedua dlu sampe ampun-ampunan..." }, text: "respect om 🫡 istri gue juga gitu tiap abis turun truk. <i>respect om 🫡 my wife is the same every time I get off the truck.</i>",
+                        reacts: [{emoji: "❤️", count: 7}, {emoji: "😂", count: 5}]});
+                }
+                if (showV) {
+                    chatDB.looking.push({id: 'sampoerna', text: "kepala udah cenat-cenut seharian gak dibuang. ada yg mau nemenin bapak \"olahraga\" malem ini? khusus daun muda yg tahan digeber ampe subuh ya, yg loyo dilarang pm 🍆💦 <i>My head has been throbbing all day because I haven't 'released' it. Anyone want to accompany 'Daddy' for a workout tonight? Only young ones who can keep up until dawn, please the weak ones aren't allowed to PM 🍆💦</i>",
+                        reacts: [{emoji: "🔥", count: 10}, {emoji: "👀", count: 8}, {emoji: "💦", count: 6}]});
+                } else if (showN) {
+                    chatDB.looking.push({id: 'sampoerna', text: "kepala udah cenat-cenut seharian gak dibuang. ada yg mau nemenin bapak \"olahraga\" malem ini? khusus daun muda yg tahan digeber ampe subuh ya, yg loyo dilarang pm 🍆💦 <i>My head has been throbbing all day because I haven't 'released' it. Anyone want to accompany 'Daddy' for a workout tonight? Only young ones who can keep up until dawn, please the weak ones aren't allowed to PM 🍆💦</i>",
+                        reacts: [{emoji: "🔥", count: 10}, {emoji: "👀", count: 8}, {emoji: "💦", count: 6}]});
+                } else {
+                    chatDB.looking.push({id: 'sampoerna', text: "kepala udah cenat-cenut seharian gak dibuang. ada yg mau nemenin bapak \"olahraga\" malem ini? khusus daun muda yg tahan digeber ampe subuh ya, yg loyo dilarang pm 🍆💦 <i>My head has been throbbing all day because I haven't 'released' it. Anyone want to accompany 'Daddy' for a workout tonight? Only young ones who can keep up until dawn, please the weak ones aren't allowed to PM 🍆💦</i>",
+                        reacts: [{emoji: "🔥", count: 10}, {emoji: "👀", count: 8}, {emoji: "💦", count: 6}]});
+                }
+                if (showOm) {
+                    chatDB.looking.push({id: 'ombengkel', text: "saingan berat nih. yang kuat tahan sampe subuh langsung ke bengkel om aja. <i>tough competition. if you can last till dawn just come to uncle's workshop.</i>",
+                        reacts: [{emoji: "😂", count: 8}, {emoji: "🔥", count: 6}]});
+                }
+                chatDB.media.push({id: 'sampoerna', text: `<img src="https://file.garden/aGgA7xAxFEwFoSQZ/Picsart_26-09-24_04-00-49-728.png" style="max-width:280px;border-radius:8px;margin-top:4px;"><br>andai anak kos lantai 3 liat apa yg disimpen bapak di balik celana ini pas mereka minta tempo bayar kos... dijamin lgsg lemas ga berkutik 🤫 <i>If the third-floor boarding house kids saw what 'Daddy' is hiding behind these pants when they ask for an extension on rent... guaranteed they'd instantly go weak and speechless 🤫</i>`,
+                    reacts: [{emoji: "🥵", count: 9}, {emoji: "🔥", count: 7}, {emoji: "👀", count: 6}]});
             }
         }
 
@@ -1652,13 +1993,23 @@
         }
 
         function renderChat(channel) {
-            let html = '<div style="height:16px;"></div>';
+            let html = '';
             let time = new Date();
-            time.setMinutes(time.getMinutes() - 40);
+            if (channel === 'media') {
+                time.setHours(22, 15, 0, 0);
+            } else {
+                time.setMinutes(time.getMinutes() - 40);
+            }
             const msgs = chatDB[channel] || [];
+            const dateLabel = channel === 'media' ? 'Tonight' : 'Today';
+            html += `<div class="date-separator">${dateLabel}</div>`;
 
             msgs.forEach((msg, idx) => {
-                time.setMinutes(time.getMinutes() + 3);
+                if (channel === 'media') {
+                    time.setMinutes(time.getMinutes() + 12 + (idx % 3) * 4);
+                } else {
+                    time.setMinutes(time.getMinutes() + 3);
+                }
                 const timeStr = time.toLocaleString([], { month:'2-digit', day:'2-digit', year:'numeric', hour:'numeric', minute:'2-digit' });
 
                 if (msg.sys) {
@@ -1679,7 +2030,7 @@
                 if (msg.reacts) {
                     reacts = '<div class="message-reactions">';
                     msg.reacts.forEach(r => {
-                        reacts += `<div class="reaction-pill"><span class="emoji">${r.emoji}</span><span class="reaction-count">${r.count}</span></div>`;
+                        reacts += `<div class="reaction-pill" onclick="toggleReact(this)" data-count="${r.count}"><span class="emoji">${r.emoji}</span><span class="reaction-count">${r.count}</span></div>`;
                     });
                     reacts += '</div>';
                 }
@@ -1691,8 +2042,10 @@
                     const rSnippet = msg.replyTo.snippet || '';
                     replyHtml = `<div class="msg-reply"><span class="msg-reply-name">${rName}</span><span class="msg-reply-snippet">${rSnippet}</span></div>`;
                 }
+                const actions = `<div class="msg-actions"><div class="msg-action-btn" title="Add reaction">😊</div><div class="msg-action-btn" title="Reply">↩️</div></div>`;
                 if (isFirst || msg.replyTo) {
                     html += `<div class="message first">
+                        ${actions}
                         <img src="${char.pfp}" class="msg-avatar" onclick="${click}">
                         <div class="msg-header">
                             <span class="msg-username ${nc}" onclick="${click}">${char.name}</span>
@@ -1703,7 +2056,7 @@
                         ${reacts}
                     </div>`;
                 } else {
-                    html += `<div class="message"><div class="msg-text">${msg.text}</div>${reacts}</div>`;
+                    html += `<div class="message">${actions}<div class="msg-text">${msg.text}</div>${reacts}</div>`;
                 }
             });
 
